@@ -3,7 +3,7 @@ package main
 import (
 	"fubuki-go/controller"
 	"fubuki-go/router"
-	"fubuki-go/service_impl"
+	"fubuki-go/service"
 	"log"
 
 	"net/http"
@@ -11,9 +11,9 @@ import (
 
 func main() {
 
-	helloWorldServiceImpl := service_impl.HelloWorldServiceImpl{}
+	helloWorldService := service.NewHelloWorldService()
 
-	helloWorldController := controller.HelloWorldController{HelloWorldService: helloWorldServiceImpl}
+	helloWorldController := controller.NewHelloWorldController(helloWorldService)
 
 	route := router.New(helloWorldController)
 

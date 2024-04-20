@@ -1,7 +1,17 @@
 package service
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
-type HelloWorldService interface {
-	HelloWorld(c *gin.Context)
+type HelloWorldService struct {
+}
+
+func NewHelloWorldService() *HelloWorldService {
+	return &HelloWorldService{}
+}
+
+func (srv *HelloWorldService) HelloWorld(c *gin.Context) {
+	c.JSON(200, "Hello World!!")
+	return
 }

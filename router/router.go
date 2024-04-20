@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func New(helloWorldController controller.HelloWorldController) *gin.Engine {
+func New(helloWorldController *controller.HelloWorldController) *gin.Engine {
 
 	router := gin.Default()
 
