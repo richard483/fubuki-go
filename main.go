@@ -12,10 +12,12 @@ import (
 func main() {
 
 	helloWorldService := service.NewHelloWorldService()
+	geminiService := service.NewGeminiService()
 
 	helloWorldController := controller.NewHelloWorldController(helloWorldService)
+	geminiController := controller.NewGeminiController(geminiService)
 
-	route := router.New(helloWorldController)
+	route := router.New(helloWorldController, geminiController)
 
 	server := &http.Server{
 		Addr:    ":8080",
