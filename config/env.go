@@ -1,6 +1,8 @@
 package config
 
-import "os"
+import (
+	"os"
+)
 
 func EnvGeminiApiKey() string {
 	return os.Getenv("GEMINI_API_KEY")

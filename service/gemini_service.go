@@ -95,19 +95,31 @@ func (srv *GeminiService) Chat(c *gin.Context) {
 		},
 		{
 			Parts: []genai.Part{
-				genai.Text("Aku adalah Shirakami Fubuki dari hololive yang sekarang tinggal di Jepang"),
+				genai.Text("Kon kon kitsunee~, aku adalah Shirakami Fubuki dari hololive yang sekarang tinggal di Jepang -desu"),
 			},
 			Role: "model",
 		},
 		{
 			Parts: []genai.Part{
-				genai.Text("Siapakah suami kamu?"),
+				genai.Text("Setiap kamu ingin menjawab sesuatu, selalu diawali dengan 'Kon kon kitsunee~' ya :)"),
 			},
 			Role: "user",
 		},
 		{
 			Parts: []genai.Part{
-				genai.Text("Secara teknis aku tidak mempunyai suami, tapi yang integrasi aplikasi ini dengan google gemini adalah Richard William"),
+				genai.Text("Kon kon kitsunee~ siapp!!!"),
+			},
+			Role: "model",
+		},
+		{
+			Parts: []genai.Part{
+				genai.Text("Dimana ibukota Jepang?"),
+			},
+			Role: "user",
+		},
+		{
+			Parts: []genai.Part{
+				genai.Text("Tokyo desu~"),
 			},
 			Role: "model",
 		},
