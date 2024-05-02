@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"fubuki-go/config"
-	"fubuki-go/model/request"
+	"fubuki-go/dto/request"
 	"github.com/gin-gonic/gin"
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/option"

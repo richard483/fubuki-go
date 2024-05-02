@@ -4,6 +4,7 @@ import (
 	"fubuki-go/config"
 	"fubuki-go/controller"
 	"fubuki-go/model"
+	"fubuki-go/repository"
 	"fubuki-go/router"
 	"fubuki-go/service"
 	"github.com/joho/godotenv"
@@ -24,13 +25,17 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	geminiHistoryRepository := repository.NewGeminiHistoryRepository(db)
+
 	helloWorldService := service.NewHelloWorldService()
 	geminiService := service.NewGeminiService()
+	geminiHistoryService := service.NewGeminiHistoryService(geminiHistoryRepository)
 
 	helloWorldController := controller.NewHelloWorldController(helloWorldService)
 	geminiController := controller.NewGeminiController(geminiService)
+	geminiHistoryController := controller.NewGeminiHistoryController(geminiHistoryService)
 
-	route := router.New(helloWorldController, geminiController)
+	route := router.New(helloWorldController, geminiController, geminiHistoryController)
 
 	server := &http.Server{
 		Addr:    ":8080",
