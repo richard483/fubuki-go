@@ -2,36 +2,22 @@ package service
 
 import (
 	"context"
-	"fubuki-go/config"
 	"fubuki-go/dto/request"
 	"github.com/google/generative-ai-go/genai"
-	"google.golang.org/api/option"
 	"log"
 )
 
 type GeminiService struct {
+	*genai.Client
 }
 
-func NewGeminiService() *GeminiService {
-	return &GeminiService{}
+func NewGeminiService(client *genai.Client) *GeminiService {
+	return &GeminiService{client}
 }
 
 func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, []string) {
 	ctx := context.TODO()
-	client, err := genai.NewClient(ctx, option.WithAPIKey(config.EnvGeminiApiKey()))
-
-	if err != nil {
-		return err, nil
-	}
-
-	defer func(client *genai.Client) {
-		err := client.Close()
-		if err != nil {
-			log.Fatalln(err)
-		}
-	}(client)
-
-	model := client.GenerativeModel("gemini-pro")
+	model := srv.Client.GenerativeModel("gemini-pro")
 	resp, err := model.GenerateContent(ctx, genai.Text(prompt.Text))
 	if err != nil {
 		return err, nil
@@ -55,20 +41,7 @@ func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, []strin
 func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, []string) {
 	ctx := context.TODO()
 
-	client, err := genai.NewClient(ctx, option.WithAPIKey(config.EnvGeminiApiKey()))
-
-	if err != nil {
-		return err, nil
-	}
-
-	defer func(client *genai.Client) {
-		err := client.Close()
-		if err != nil {
-			log.Fatalln(err)
-		}
-	}(client)
-
-	model := client.GenerativeModel("gemini-pro")
+	model := srv.Client.GenerativeModel("gemini-pro")
 	cs := model.StartChat()
 
 	cs.History = []*genai.Content{
