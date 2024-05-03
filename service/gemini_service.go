@@ -15,7 +15,7 @@ func NewGeminiService(client *genai.Client) *GeminiService {
 	return &GeminiService{client}
 }
 
-func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, []string) {
+func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, *[]string) {
 	ctx := context.TODO()
 	model := srv.Client.GenerativeModel("gemini-pro")
 	resp, err := model.GenerateContent(ctx, genai.Text(prompt.Text))
@@ -35,10 +35,10 @@ func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, []strin
 		}
 	}
 
-	return nil, results
+	return nil, &results
 }
 
-func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, []string) {
+func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, *[]string) {
 	ctx := context.TODO()
 
 	model := srv.Client.GenerativeModel("gemini-pro")
