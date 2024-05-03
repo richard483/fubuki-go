@@ -1,9 +1,12 @@
 package controller
 
 import (
+	"fubuki-go/dto/request"
+	"fubuki-go/dto/response"
 	"fubuki-go/service"
 	"fubuki-go/service_interface"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type GeminiHistoryController struct {
@@ -23,7 +26,33 @@ func NewGeminiHistoryController(service *service.GeminiHistoryService) *GeminiHi
 // @Param        CreateGeminiHistory body request.CreateGeminiHistory true "Request Body"
 // @Router       /gemini-history/history-data [post]
 func (ctr *GeminiHistoryController) CreateHistoryData(c *gin.Context) {
-	ctr.Service.CreateHistoryData(c)
+	var historyData request.GeminiHistory
+	if err := c.Bind(&historyData); err != nil {
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	err := ctr.Service.CreateHistoryData(&historyData)
+
+	if err != nil {
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	res := response.DefaultResponse{
+		StatusCode: http.StatusOK,
+		Message:    http.StatusText(http.StatusOK),
+		Data:       "Success created history data",
+	}
+	c.JSON(http.StatusOK, res)
 	return
 }
 
@@ -35,7 +64,13 @@ func (ctr *GeminiHistoryController) CreateHistoryData(c *gin.Context) {
 // @Produce      json
 // @Router       /gemini-history/history-data [get]
 func (ctr *GeminiHistoryController) GetAllHistoryData(c *gin.Context) {
-	ctr.Service.GetAllHistoryData(c)
+	data := ctr.Service.GetAllHistoryData()
+	res := response.DefaultResponse{
+		StatusCode: http.StatusOK,
+		Message:    http.StatusText(http.StatusOK),
+		Data:       data,
+	}
+	c.JSON(http.StatusOK, res)
 	return
 }
 
@@ -48,7 +83,32 @@ func (ctr *GeminiHistoryController) GetAllHistoryData(c *gin.Context) {
 // @Param        UpdateGeminiHistory body request.UpdateGeminiHistory true "Request Body"
 // @Router       /gemini-history/history-data [patch]
 func (ctr *GeminiHistoryController) UpdateHistoryData(c *gin.Context) {
-	ctr.Service.UpdateHistoryData(c)
+	var historyData request.GeminiHistory
+	if err := c.Bind(&historyData); err != nil {
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	err := ctr.Service.UpdateHistoryData(&historyData)
+	if err != nil {
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	res := response.DefaultResponse{
+		StatusCode: http.StatusOK,
+		Message:    http.StatusText(http.StatusOK),
+		Data:       "Success updated history data",
+	}
+	c.JSON(http.StatusOK, res)
 	return
 }
 
@@ -61,6 +121,34 @@ func (ctr *GeminiHistoryController) UpdateHistoryData(c *gin.Context) {
 // @Param        id query string false "history ID to be deleted"
 // @Router       /gemini-history/history-data [delete]
 func (ctr *GeminiHistoryController) DeleteHistoryData(c *gin.Context) {
-	ctr.Service.DeleteHistoryData(c)
+	id, ok := c.GetQuery("id")
+
+	if !ok {
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      "no 'id' parameter found on REST request",
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	err := ctr.Service.DeleteHistoryData(id)
+
+	if err != nil {
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	res := response.DefaultResponse{
+		StatusCode: http.StatusOK,
+		Message:    http.StatusText(http.StatusOK),
+		Data:       "Success updated history data",
+	}
+	c.JSON(http.StatusOK, res)
 	return
 }

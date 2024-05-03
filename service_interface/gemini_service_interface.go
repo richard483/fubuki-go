@@ -1,10 +1,10 @@
 package service_interface
 
 import (
-	"github.com/gin-gonic/gin"
+	"fubuki-go/dto/request"
 )
 
 type GeminiServiceInterface interface {
-	PromptText(c *gin.Context)
-	Chat(c *gin.Context)
+	PromptText(prompt *request.GeminiText) (error, []string)
+	Chat(prompt *request.GeminiText) (error, []string)
 }

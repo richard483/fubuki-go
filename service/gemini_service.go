@@ -4,12 +4,9 @@ import (
 	"context"
 	"fubuki-go/config"
 	"fubuki-go/dto/request"
-	"github.com/gin-gonic/gin"
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/option"
 	"log"
-	"net/http"
-	"os"
 )
 
 type GeminiService struct {
@@ -19,17 +16,12 @@ func NewGeminiService() *GeminiService {
 	return &GeminiService{}
 }
 
-func (srv *GeminiService) PromptText(c *gin.Context) {
-	var prompt request.GeminiText
-	if err := c.BindJSON(&prompt); err != nil {
-		return
-	}
-
+func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, []string) {
 	ctx := context.TODO()
 	client, err := genai.NewClient(ctx, option.WithAPIKey(config.EnvGeminiApiKey()))
 
 	if err != nil {
-		log.Fatalln(err)
+		return err, nil
 	}
 
 	defer func(client *genai.Client) {
@@ -41,9 +33,8 @@ func (srv *GeminiService) PromptText(c *gin.Context) {
 
 	model := client.GenerativeModel("gemini-pro")
 	resp, err := model.GenerateContent(ctx, genai.Text(prompt.Text))
-
 	if err != nil {
-		log.Fatalln(err)
+		return err, nil
 	}
 
 	var results []string
@@ -58,22 +49,16 @@ func (srv *GeminiService) PromptText(c *gin.Context) {
 		}
 	}
 
-	c.IndentedJSON(http.StatusOK, results)
-	return
+	return nil, results
 }
 
-func (srv *GeminiService) Chat(c *gin.Context) {
-	var prompt request.GeminiText
-	if err := c.BindJSON(&prompt); err != nil {
-		return
-	}
-
+func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, []string) {
 	ctx := context.TODO()
 
-	client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_API_KEY")))
+	client, err := genai.NewClient(ctx, option.WithAPIKey(config.EnvGeminiApiKey()))
 
 	if err != nil {
-		log.Fatalln(err)
+		return err, nil
 	}
 
 	defer func(client *genai.Client) {
@@ -87,37 +72,37 @@ func (srv *GeminiService) Chat(c *gin.Context) {
 	cs := model.StartChat()
 
 	cs.History = []*genai.Content{
-		{
+		&genai.Content{
 			Parts: []genai.Part{
 				genai.Text("Siapakah kamu?"),
 			},
 			Role: "user",
 		},
-		{
+		&genai.Content{
 			Parts: []genai.Part{
 				genai.Text("Kon kon kitsunee~, aku adalah Shirakami Fubuki dari hololive yang sekarang tinggal di Jepang -desu"),
 			},
 			Role: "model",
 		},
-		{
+		&genai.Content{
 			Parts: []genai.Part{
 				genai.Text("Setiap kamu ingin menjawab sesuatu, selalu diawali dengan 'Kon kon kitsunee~' ya :)"),
 			},
 			Role: "user",
 		},
-		{
+		&genai.Content{
 			Parts: []genai.Part{
 				genai.Text("Kon kon kitsunee~ siapp!!!"),
 			},
 			Role: "model",
 		},
-		{
+		&genai.Content{
 			Parts: []genai.Part{
 				genai.Text("Dimana ibukota Jepang?"),
 			},
 			Role: "user",
 		},
-		{
+		&genai.Content{
 			Parts: []genai.Part{
 				genai.Text("Tokyo desu~"),
 			},
@@ -128,8 +113,9 @@ func (srv *GeminiService) Chat(c *gin.Context) {
 	resp, err := cs.SendMessage(ctx, genai.Text(prompt.Text))
 
 	if err != nil {
-		log.Fatalln(err)
+		return err, nil
 	}
+	log.Println(resp)
 
 	var results []string
 
@@ -143,6 +129,5 @@ func (srv *GeminiService) Chat(c *gin.Context) {
 		}
 	}
 
-	c.IndentedJSON(http.StatusOK, results)
-	return
+	return nil, nil
 }

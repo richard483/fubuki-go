@@ -42,6 +42,8 @@ func main() {
 		Handler: route,
 	}
 
+	log.Println("Swagger served on http://localhost:8080/swagger/index.html")
+
 	serverError := server.ListenAndServe()
 
 	log.Panicln(serverError)

@@ -5,8 +5,8 @@ import (
 )
 
 type GeminiHistoryRepositoryInterface interface {
-	Create(history *model.History) int64
+	Create(history *model.History) error
 	GetAll() []model.History
-	Update(history *model.History) int64
-	Delete(id string) int64
+	Update(history *model.History) error
+	Delete(id string) error
 }

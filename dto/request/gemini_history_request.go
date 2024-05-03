@@ -1,11 +1,6 @@
 package request
 
-type CreateGeminiHistory struct {
-	UserQuestion string `json:"question,omitempty" binding:"required" validate:"required"`
-	ModelAnswer  string `json:"answer,omitempty" binding:"required" validate:"required"`
-}
-
-type UpdateGeminiHistory struct {
-	UserQuestion string `json:"question,omitempty" binding:"required" validate:"required"`
-	ModelAnswer  string `json:"answer,omitempty" binding:"required" validate:"required"`
+type GeminiHistory struct {
+	UserQuestion string `json:"question" binding:"required" validate:"required"`
+	ModelAnswer  string `json:"answer" binding:"required" validate:"required"`
 }

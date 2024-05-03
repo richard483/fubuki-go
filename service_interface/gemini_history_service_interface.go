@@ -1,12 +1,13 @@
 package service_interface
 
 import (
-	"github.com/gin-gonic/gin"
+	"fubuki-go/dto/request"
+	"fubuki-go/model"
 )
 
 type GeminiHistoryServiceInterface interface {
-	CreateHistoryData(c *gin.Context)
-	GetAllHistoryData(c *gin.Context)
-	UpdateHistoryData(c *gin.Context)
-	DeleteHistoryData(c *gin.Context)
+	CreateHistoryData(historyData *request.GeminiHistory) error
+	GetAllHistoryData() *[]model.History
+	UpdateHistoryData(historyData *request.GeminiHistory) error
+	DeleteHistoryData(id string) error
 }

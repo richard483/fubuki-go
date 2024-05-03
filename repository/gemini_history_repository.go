@@ -14,14 +14,9 @@ func NewGeminiHistoryRepository(db *gorm.DB) *GeminiHistoryRepository {
 	return &GeminiHistoryRepository{db}
 }
 
-func (r *GeminiHistoryRepository) Create(history *model.History) int64 {
+func (r *GeminiHistoryRepository) Create(history *model.History) error {
 	result := r.DB.Create(&history)
-
-	if err := result.Error; err != nil {
-		log.Fatalln(err)
-	}
-
-	return result.RowsAffected
+	return result.Error
 }
 
 func (r *GeminiHistoryRepository) GetAll() []model.History {
@@ -35,22 +30,14 @@ func (r *GeminiHistoryRepository) GetAll() []model.History {
 	return histories
 }
 
-func (r *GeminiHistoryRepository) Update(history *model.History) int64 {
+func (r *GeminiHistoryRepository) Update(history *model.History) error {
 	result := r.DB.Save(&history)
 
-	if err := result.Error; err != nil {
-		log.Fatalln(err)
-	}
-
-	return result.RowsAffected
+	return result.Error
 }
 
-func (r *GeminiHistoryRepository) Delete(id string) int64 {
+func (r *GeminiHistoryRepository) Delete(id string) error {
 	result := r.DB.Delete(&model.History{}, id)
 
-	if err := result.Error; err != nil {
-		log.Fatalln(err)
-	}
-
-	return result.RowsAffected
+	return result.Error
 }

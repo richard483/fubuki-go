@@ -4,9 +4,6 @@ import (
 	"fubuki-go/dto/request"
 	"fubuki-go/model"
 	repository "fubuki-go/repository_interface"
-	"github.com/gin-gonic/gin"
-	"log"
-	"net/http"
 )
 
 type GeminiHistoryService struct {
@@ -17,54 +14,31 @@ func NewGeminiHistoryService(Repository repository.GeminiHistoryRepositoryInterf
 	return &GeminiHistoryService{Repository: Repository}
 }
 
-func (srv *GeminiHistoryService) CreateHistoryData(c *gin.Context) {
-	var historyData request.CreateGeminiHistory
-	if err := c.BindJSON(&historyData); err != nil {
-		return
-	}
+func (srv *GeminiHistoryService) CreateHistoryData(historyData *request.GeminiHistory) error {
 
-	rowAffected := srv.Repository.Create(&model.History{
+	err := srv.Repository.Create(&model.History{
 		UserQuestion: historyData.UserQuestion,
 		ModelAnswer:  historyData.ModelAnswer,
 	})
-
-	c.IndentedJSON(http.StatusOK, rowAffected)
-	return
+	return err
 }
 
-func (srv *GeminiHistoryService) GetAllHistoryData(c *gin.Context) {
+func (srv *GeminiHistoryService) GetAllHistoryData() *[]model.History {
 	results := srv.Repository.GetAll()
 
-	c.IndentedJSON(http.StatusOK, results)
-	return
+	return &results
 }
 
-func (srv *GeminiHistoryService) UpdateHistoryData(c *gin.Context) {
-	var historyData request.UpdateGeminiHistory
-	if err := c.BindJSON(&historyData); err != nil {
-		log.Fatalln(err)
-		return
-	}
-
-	rowAffected := srv.Repository.Update(&model.History{
+func (srv *GeminiHistoryService) UpdateHistoryData(historyData *request.GeminiHistory) error {
+	err := srv.Repository.Update(&model.History{
 		UserQuestion: historyData.UserQuestion,
 		ModelAnswer:  historyData.ModelAnswer,
 	})
 
-	c.IndentedJSON(http.StatusOK, rowAffected)
-	return
+	return err
 }
 
-func (srv *GeminiHistoryService) DeleteHistoryData(c *gin.Context) {
-
-	res, ok := c.GetQuery("id")
-
-	if !ok {
-		log.Fatalln("No 'id' parameter found on REST request")
-		return
-	}
-	rowAffected := srv.Repository.Delete(res)
-
-	c.IndentedJSON(http.StatusOK, rowAffected)
-	return
+func (srv *GeminiHistoryService) DeleteHistoryData(id string) error {
+	err := srv.Repository.Delete(id)
+	return err
 }
