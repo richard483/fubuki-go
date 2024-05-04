@@ -48,9 +48,9 @@ func main() {
 	var geminiService service_interface.GeminiServiceInterface
 
 	if config.EnvGeminiAPI() {
-		geminiService = service.NewGeminiApiService(client)
+		geminiService = service.NewGeminiApiService(client, geminiHistoryRepository)
 	} else {
-		geminiService = service.NewGeminiService(client)
+		geminiService = service.NewGeminiService(client, geminiHistoryRepository)
 	}
 
 	helloWorldService := service.NewHelloWorldService()

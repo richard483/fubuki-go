@@ -3,16 +3,18 @@ package service
 import (
 	"context"
 	"fubuki-go/dto/request"
+	repository "fubuki-go/repository_interface"
 	"github.com/google/generative-ai-go/genai"
 	"log"
 )
 
 type GeminiService struct {
 	*genai.Client
+	repository.GeminiHistoryRepositoryInterface
 }
 
-func NewGeminiService(client *genai.Client) *GeminiService {
-	return &GeminiService{client}
+func NewGeminiService(client *genai.Client, repository repository.GeminiHistoryRepositoryInterface) *GeminiService {
+	return &GeminiService{client, repository}
 }
 
 func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, *[]string) {
@@ -44,43 +46,22 @@ func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, *[]string) {
 	model := srv.Client.GenerativeModel("gemini-pro")
 	cs := model.StartChat()
 
-	cs.History = []*genai.Content{
-		&genai.Content{
+	var histories = srv.GetAll()
+
+	for _, history := range histories {
+		cs.History = append(cs.History, &genai.Content{
 			Parts: []genai.Part{
-				genai.Text("Siapakah kamu?"),
+				genai.Text(history.UserQuestion),
 			},
 			Role: "user",
-		},
-		&genai.Content{
+		})
+
+		cs.History = append(cs.History, &genai.Content{
 			Parts: []genai.Part{
-				genai.Text("Kon kon kitsunee~, aku adalah Shirakami Fubuki dari hololive yang sekarang tinggal di Jepang -desu"),
+				genai.Text(history.ModelAnswer),
 			},
 			Role: "model",
-		},
-		&genai.Content{
-			Parts: []genai.Part{
-				genai.Text("Setiap kamu ingin menjawab sesuatu, selalu diawali dengan 'Kon kon kitsunee~' ya :)"),
-			},
-			Role: "user",
-		},
-		&genai.Content{
-			Parts: []genai.Part{
-				genai.Text("Kon kon kitsunee~ siapp!!!"),
-			},
-			Role: "model",
-		},
-		&genai.Content{
-			Parts: []genai.Part{
-				genai.Text("Dimana ibukota Jepang?"),
-			},
-			Role: "user",
-		},
-		&genai.Content{
-			Parts: []genai.Part{
-				genai.Text("Tokyo desu~"),
-			},
-			Role: "model",
-		},
+		})
 	}
 
 	resp, err := cs.SendMessage(ctx, genai.Text(prompt.Text))
@@ -102,5 +83,5 @@ func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, *[]string) {
 		}
 	}
 
-	return nil, nil
+	return nil, &results
 }

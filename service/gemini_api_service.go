@@ -10,6 +10,7 @@ import (
 	"fubuki-go/dto/request"
 	extRequest "fubuki-go/dto/request_ext"
 	request2 "fubuki-go/dto/response_ext"
+	repository "fubuki-go/repository_interface"
 	"github.com/google/generative-ai-go/genai"
 	"io"
 	"log"
@@ -18,10 +19,11 @@ import (
 
 type GeminiApiService struct {
 	*genai.Client
+	repository.GeminiHistoryRepositoryInterface
 }
 
-func NewGeminiApiService(client *genai.Client) *GeminiApiService {
-	return &GeminiApiService{client}
+func NewGeminiApiService(client *genai.Client, repository repository.GeminiHistoryRepositoryInterface) *GeminiApiService {
+	return &GeminiApiService{client, repository}
 }
 
 func (srv *GeminiApiService) PromptText(prompt *request.GeminiText) (error, *[]string) {
@@ -52,6 +54,25 @@ func (srv *GeminiApiService) Chat(prompt *request.GeminiText) (error, *[]string)
 	client := &http.Client{}
 
 	var contents []extRequest.GeminiContent
+
+	var histories = srv.GetAll()
+
+	for _, history := range histories {
+		contents = append(contents, extRequest.GeminiContent{
+			Parts: &[]extRequest.GeminiPart{{
+				Text: history.UserQuestion,
+			}},
+			Role: "user",
+		})
+
+		contents = append(contents, extRequest.GeminiContent{
+			Parts: &[]extRequest.GeminiPart{{
+				Text: history.ModelAnswer,
+			}},
+			Role: "model",
+		})
+	}
+
 	content := extRequest.GeminiContent{
 		Parts: &[]extRequest.GeminiPart{{
 			Text: prompt.Text,

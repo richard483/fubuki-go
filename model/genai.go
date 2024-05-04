@@ -1,13 +1,12 @@
 package model
 
 import (
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"time"
 )
 
 type History struct {
-	ID           uuid.UUID `gorm:"primaryKey;default:uuid_generate_v4()"`
+	ID           uint `gorm:"primaryKey"`
 	UserQuestion string
 	ModelAnswer  string
 	CreatedAt    time.Time
