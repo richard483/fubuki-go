@@ -22,6 +22,7 @@ func New(helloWorldController *controller.HelloWorldController, geminiController
 	{
 		gemini.POST("/prompt-text", geminiController.PromptText)
 		gemini.POST("/chat", geminiController.Chat)
+		gemini.GET("/tune", geminiController.TuneModel)
 	}
 
 	geminiHistory := router.Group("/gemini-history")

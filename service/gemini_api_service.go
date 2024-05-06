@@ -43,7 +43,7 @@ func (srv *GeminiApiService) Chat(prompt *request.GeminiText) (error, *[]string)
 	url := "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + config.EnvGeminiApiKey()
 	client := &http.Client{}
 
-	if historyContent == nil {
+	if historyContent == nil && config.EnvRetrieveHistory() {
 		lock.Lock()
 		defer lock.Unlock()
 
@@ -85,6 +85,10 @@ func (srv *GeminiApiService) Chat(prompt *request.GeminiText) (error, *[]string)
 	}
 
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(jsonData))
+	if err != nil {
+		return err, nil
+	}
+
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 
@@ -127,4 +131,11 @@ func (srv *GeminiApiService) Chat(prompt *request.GeminiText) (error, *[]string)
 	historyContent = append(historyContent, content)
 
 	return nil, &results
+}
+
+func (srv *GeminiApiService) TuneModel() (error, *request2.GeminiTunedModel) {
+	if geminiDefaultService == nil {
+		geminiDefaultService = NewGeminiService(srv.Client, srv.GeminiHistoryRepositoryInterface)
+	}
+	return geminiDefaultService.TuneModel()
 }
