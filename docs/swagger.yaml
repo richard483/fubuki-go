@@ -1,0 +1,106 @@
+definitions:
+  request.GeminiHistory:
+    properties:
+      answer:
+        type: string
+      question:
+        type: string
+    required:
+    - answer
+    - question
+    type: object
+  request.GeminiText:
+    properties:
+      text:
+        type: string
+    required:
+    - text
+    type: object
+info:
+  contact: {}
+paths:
+  /gemini-history/history-data:
+    delete:
+      description: delete history data
+      parameters:
+      - description: history ID to be deleted
+        in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: DeleteHistoryData
+      tags:
+      - gemini-history
+    get:
+      description: get all history data
+      produces:
+      - application/json
+      responses: {}
+      summary: GetAllHistoryData
+      tags:
+      - gemini-history
+    patch:
+      description: update history data
+      parameters:
+      - description: Request Body
+        in: body
+        name: UpdateGeminiHistory
+        required: true
+        schema:
+          $ref: '#/definitions/request.GeminiHistory'
+      produces:
+      - application/json
+      responses: {}
+      summary: UpdateHistoryData
+      tags:
+      - gemini-history
+    post:
+      description: create history data
+      parameters:
+      - description: Request Body
+        in: body
+        name: CreateGeminiHistory
+        required: true
+        schema:
+          $ref: '#/definitions/request.GeminiHistory'
+      produces:
+      - application/json
+      responses: {}
+      summary: CreateHistoryData
+      tags:
+      - gemini-history
+  /gemini/chat:
+    post:
+      description: chat action API
+      parameters:
+      - description: Request Body
+        in: body
+        name: GeminiText
+        required: true
+        schema:
+          $ref: '#/definitions/request.GeminiText'
+      produces:
+      - application/json
+      responses: {}
+      summary: Chat
+      tags:
+      - gemini
+  /gemini/prompt-text:
+    post:
+      description: get prompt text result by prompt string
+      parameters:
+      - description: Request Body
+        in: body
+        name: GeminiText
+        required: true
+        schema:
+          $ref: '#/definitions/request.GeminiText'
+      produces:
+      - application/json
+      responses: {}
+      summary: Prompt Text
+      tags:
+      - gemini
+swagger: "2.0"
