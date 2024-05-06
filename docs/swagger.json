@@ -32,7 +32,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.CreateGeminiHistory"
+                            "$ref": "#/definitions/request.GeminiHistory"
                         }
                     }
                 ],
@@ -73,7 +73,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.UpdateGeminiHistory"
+                            "$ref": "#/definitions/request.GeminiHistory"
                         }
                     }
                 ],
@@ -130,7 +130,7 @@
         }
     },
     "definitions": {
-        "request.CreateGeminiHistory": {
+        "request.GeminiHistory": {
             "type": "object",
             "required": [
                 "answer",
@@ -152,21 +152,6 @@
             ],
             "properties": {
                 "text": {
-                    "type": "string"
-                }
-            }
-        },
-        "request.UpdateGeminiHistory": {
-            "type": "object",
-            "required": [
-                "answer",
-                "question"
-            ],
-            "properties": {
-                "answer": {
-                    "type": "string"
-                },
-                "question": {
                     "type": "string"
                 }
             }

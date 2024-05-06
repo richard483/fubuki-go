@@ -43,7 +43,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.CreateGeminiHistory"
+                            "$ref": "#/definitions/request.GeminiHistory"
                         }
                     }
                 ],
@@ -84,7 +84,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.UpdateGeminiHistory"
+                            "$ref": "#/definitions/request.GeminiHistory"
                         }
                     }
                 ],
@@ -141,7 +141,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "request.CreateGeminiHistory": {
+        "request.GeminiHistory": {
             "type": "object",
             "required": [
                 "answer",
@@ -163,21 +163,6 @@ const docTemplate = `{
             ],
             "properties": {
                 "text": {
-                    "type": "string"
-                }
-            }
-        },
-        "request.UpdateGeminiHistory": {
-            "type": "object",
-            "required": [
-                "answer",
-                "question"
-            ],
-            "properties": {
-                "answer": {
-                    "type": "string"
-                },
-                "question": {
                     "type": "string"
                 }
             }

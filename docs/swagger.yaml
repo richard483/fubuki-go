@@ -1,5 +1,5 @@
 definitions:
-  request.CreateGeminiHistory:
+  request.GeminiHistory:
     properties:
       answer:
         type: string
@@ -15,16 +15,6 @@ definitions:
         type: string
     required:
     - text
-    type: object
-  request.UpdateGeminiHistory:
-    properties:
-      answer:
-        type: string
-      question:
-        type: string
-    required:
-    - answer
-    - question
     type: object
 info:
   contact: {}
@@ -59,7 +49,7 @@ paths:
         name: UpdateGeminiHistory
         required: true
         schema:
-          $ref: '#/definitions/request.UpdateGeminiHistory'
+          $ref: '#/definitions/request.GeminiHistory'
       produces:
       - application/json
       responses: {}
@@ -74,7 +64,7 @@ paths:
         name: CreateGeminiHistory
         required: true
         schema:
-          $ref: '#/definitions/request.CreateGeminiHistory'
+          $ref: '#/definitions/request.GeminiHistory'
       produces:
       - application/json
       responses: {}

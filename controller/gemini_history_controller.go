@@ -23,7 +23,7 @@ func NewGeminiHistoryController(service *service.GeminiHistoryService) *GeminiHi
 // @Tags         gemini-history
 // @Consume      json
 // @Produce      json
-// @Param        CreateGeminiHistory body request.CreateGeminiHistory true "Request Body"
+// @Param        CreateGeminiHistory body request.GeminiHistory true "Request Body"
 // @Router       /gemini-history/history-data [post]
 func (ctr *GeminiHistoryController) CreateHistoryData(c *gin.Context) {
 	var historyData request.GeminiHistory
@@ -80,7 +80,7 @@ func (ctr *GeminiHistoryController) GetAllHistoryData(c *gin.Context) {
 // @Tags         gemini-history
 // @Consume      json
 // @Produce      json
-// @Param        UpdateGeminiHistory body request.UpdateGeminiHistory true "Request Body"
+// @Param        UpdateGeminiHistory body request.GeminiHistory true "Request Body"
 // @Router       /gemini-history/history-data [patch]
 func (ctr *GeminiHistoryController) UpdateHistoryData(c *gin.Context) {
 	var historyData request.GeminiHistory
