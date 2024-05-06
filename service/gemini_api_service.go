@@ -2,7 +2,6 @@ package service
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -15,6 +14,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"sync"
 )
 
 type GeminiApiService struct {
@@ -22,55 +22,49 @@ type GeminiApiService struct {
 	repository.GeminiHistoryRepositoryInterface
 }
 
+var lock = &sync.Mutex{}
+
+var historyContent []extRequest.GeminiContent
+
+var geminiDefaultService *GeminiService
+
 func NewGeminiApiService(client *genai.Client, repository repository.GeminiHistoryRepositoryInterface) *GeminiApiService {
 	return &GeminiApiService{client, repository}
 }
 
 func (srv *GeminiApiService) PromptText(prompt *request.GeminiText) (error, *[]string) {
-	ctx := context.TODO()
-	model := srv.Client.GenerativeModel("gemini-pro")
-	resp, err := model.GenerateContent(ctx, genai.Text(prompt.Text))
-	if err != nil {
-		return err, nil
+	if geminiDefaultService == nil {
+		geminiDefaultService = NewGeminiService(srv.Client, srv.GeminiHistoryRepositoryInterface)
 	}
-
-	var results []string
-
-	for _, candidate := range resp.Candidates {
-		if candidate.Content != nil {
-			for _, part := range candidate.Content.Parts {
-				if text, ok := part.(genai.Text); ok {
-					results = append(results, string(text))
-				}
-			}
-		}
-	}
-
-	return nil, &results
+	return geminiDefaultService.PromptText(prompt)
 }
 
 func (srv *GeminiApiService) Chat(prompt *request.GeminiText) (error, *[]string) {
 	url := "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + config.EnvGeminiApiKey()
 	client := &http.Client{}
 
-	var contents []extRequest.GeminiContent
+	if historyContent == nil {
+		lock.Lock()
+		defer lock.Unlock()
 
-	var histories = srv.GetAll()
+		if historyContent == nil {
+			var histories = srv.GetAll()
+			for _, history := range histories {
+				historyContent = append(historyContent, extRequest.GeminiContent{
+					Parts: &[]extRequest.GeminiPart{{
+						Text: history.UserQuestion,
+					}},
+					Role: "user",
+				})
 
-	for _, history := range histories {
-		contents = append(contents, extRequest.GeminiContent{
-			Parts: &[]extRequest.GeminiPart{{
-				Text: history.UserQuestion,
-			}},
-			Role: "user",
-		})
-
-		contents = append(contents, extRequest.GeminiContent{
-			Parts: &[]extRequest.GeminiPart{{
-				Text: history.ModelAnswer,
-			}},
-			Role: "model",
-		})
+				historyContent = append(historyContent, extRequest.GeminiContent{
+					Parts: &[]extRequest.GeminiPart{{
+						Text: history.ModelAnswer,
+					}},
+					Role: "model",
+				})
+			}
+		}
 	}
 
 	content := extRequest.GeminiContent{
@@ -80,9 +74,9 @@ func (srv *GeminiApiService) Chat(prompt *request.GeminiText) (error, *[]string)
 		Role: "user",
 	}
 
-	contents = append(contents, content)
+	historyContent = append(historyContent, content)
 
-	geminiContents := extRequest.GeminiContents{Contents: &contents}
+	geminiContents := extRequest.GeminiContents{Contents: &historyContent}
 
 	var jsonData []byte
 	jsonData, err := json.Marshal(geminiContents)
@@ -122,6 +116,15 @@ func (srv *GeminiApiService) Chat(prompt *request.GeminiText) (error, *[]string)
 			results = append(results, string(part.Text))
 		}
 	}
+
+	content = extRequest.GeminiContent{
+		Parts: &[]extRequest.GeminiPart{{
+			Text: results[0],
+		}},
+		Role: "model",
+	}
+
+	historyContent = append(historyContent, content)
 
 	return nil, &results
 }
