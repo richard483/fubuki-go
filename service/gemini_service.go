@@ -26,9 +26,12 @@ func NewGeminiService(client *genai.Client, repository repository.GeminiHistoryR
 	return &GeminiService{client, repository}
 }
 
+var geminiModel *genai.GenerativeModel
+var chatSession *genai.ChatSession
+
 func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, *[]string) {
 	ctx := context.TODO()
-	model := srv.Client.GenerativeModel("gemini-pro")
+	model := srv.geminiModel()
 	resp, err := model.GenerateContent(ctx, genai.Text(prompt.Text))
 	if err != nil {
 		return err, nil
@@ -52,8 +55,8 @@ func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, *[]stri
 func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, *[]string) {
 	ctx := context.TODO()
 
-	model := srv.Client.GenerativeModel("gemini-pro")
-	cs := model.StartChat()
+	model := srv.geminiModel()
+	cs := srv.chatSession(model)
 
 	if config.EnvRetrieveHistory() {
 		var histories = srv.GetAll()
@@ -168,4 +171,18 @@ func (srv *GeminiService) TuneModel() (error, *request2.GeminiTunedModel) {
 	}
 
 	return nil, &response
+}
+
+func (srv *GeminiService) geminiModel() *genai.GenerativeModel {
+	if geminiModel == nil {
+		geminiModel = srv.Client.GenerativeModel("gemini-pro")
+	}
+	return geminiModel
+}
+
+func (srv *GeminiService) chatSession(model *genai.GenerativeModel) *genai.ChatSession {
+	if chatSession == nil {
+		chatSession = model.StartChat()
+	}
+	return chatSession
 }

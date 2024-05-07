@@ -23,9 +23,7 @@ type GeminiApiService struct {
 }
 
 var lock = &sync.Mutex{}
-
 var historyContent []extRequest.GeminiContent
-
 var geminiDefaultService *GeminiService
 
 func NewGeminiApiService(client *genai.Client, repository repository.GeminiHistoryRepositoryInterface) *GeminiApiService {
@@ -128,6 +126,9 @@ func (srv *GeminiApiService) Chat(prompt *request.GeminiText) (error, *[]string)
 		Role: "model",
 	}
 
+	if len(historyContent) > 500 {
+		historyContent = append(historyContent[:0], historyContent[1:]...)
+	}
 	historyContent = append(historyContent, content)
 
 	return nil, &results
