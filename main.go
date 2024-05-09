@@ -10,7 +10,6 @@ import (
 	"fubuki-go/service"
 	"fubuki-go/service_interface"
 	"github.com/google/generative-ai-go/genai"
-	"github.com/joho/godotenv"
 	"google.golang.org/api/option"
 	"log"
 
@@ -18,10 +17,6 @@ import (
 )
 
 func main() {
-
-	if err := godotenv.Load(); err != nil {
-		log.Fatalln(err)
-	}
 
 	db := config.NewDbConnection()
 	if err := db.AutoMigrate(&model.History{}); err != nil {
