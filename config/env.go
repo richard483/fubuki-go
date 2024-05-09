@@ -27,6 +27,10 @@ func EnvGoogleProjectId() string {
 	return os.Getenv("GOOGLE_PROJECT_ID")
 }
 
+func EnvHost() string {
+	return os.Getenv("HOST")
+}
+
 func EnvGoogleAccessToken() string {
 	return os.Getenv("GOOGLE_ACCESS_TOKEN")
 }
