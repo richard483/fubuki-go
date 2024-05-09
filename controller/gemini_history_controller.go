@@ -56,6 +56,45 @@ func (ctr *GeminiHistoryController) CreateHistoryData(c *gin.Context) {
 	return
 }
 
+// CreateManyHistoryData godoc
+// @Summary      CreateManyHistoryData
+// @Description  create many history data
+// @Tags         gemini-history
+// @Consume      json
+// @Produce      json
+// @Param        CreateManyGeminiHistory body []request.GeminiHistory true "Request Body"
+// @Router       /gemini-history/history-data/bulk [post]
+func (ctr *GeminiHistoryController) CreateManyHistoryData(c *gin.Context) {
+	var historyData []request.GeminiHistory
+	if err := c.Bind(&historyData); err != nil {
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	err := ctr.Service.CreateManyHistoryData(&historyData)
+
+	if err != nil {
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	res := response.DefaultResponse{
+		StatusCode: http.StatusOK,
+		Message:    http.StatusText(http.StatusOK),
+		Data:       "Success created bulk history data",
+	}
+	c.JSON(http.StatusOK, res)
+	return
+}
+
 // GetAllHistoryData godoc
 // @Summary      GetAllHistoryData
 // @Description  get all history data

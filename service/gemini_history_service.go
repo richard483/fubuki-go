@@ -23,6 +23,19 @@ func (srv *GeminiHistoryService) CreateHistoryData(historyData *request.GeminiHi
 	return err
 }
 
+func (srv *GeminiHistoryService) CreateManyHistoryData(historiesData *[]request.GeminiHistory) error {
+
+	var histories []model.History
+	for _, data := range *historiesData {
+		histories = append(histories, model.History{
+			UserQuestion: data.UserQuestion,
+			ModelAnswer:  data.ModelAnswer,
+		})
+	}
+	err := srv.Repository.CreateMany(&histories)
+	return err
+}
+
 func (srv *GeminiHistoryService) GetAllHistoryData() *[]model.History {
 	results := srv.Repository.GetAll()
 

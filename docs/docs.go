@@ -91,6 +91,33 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/gemini-history/history-data/bulk": {
+            "post": {
+                "description": "create many history data",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "gemini-history"
+                ],
+                "summary": "CreateManyHistoryData",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "CreateManyGeminiHistory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/request.GeminiHistory"
+                            }
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/gemini/chat": {
             "post": {
                 "description": "chat action API",

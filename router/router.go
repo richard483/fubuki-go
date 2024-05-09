@@ -28,6 +28,7 @@ func New(helloWorldController *controller.HelloWorldController, geminiController
 	geminiHistory := router.Group("/gemini-history")
 	{
 		geminiHistory.POST("/history-data", geminiHistoryController.CreateHistoryData)
+		geminiHistory.POST("/history-data/bulk", geminiHistoryController.CreateManyHistoryData)
 		geminiHistory.PATCH("/history-data", geminiHistoryController.UpdateHistoryData)
 		geminiHistory.GET("/history-data", geminiHistoryController.GetAllHistoryData)
 		geminiHistory.DELETE("/history-data", geminiHistoryController.DeleteHistoryData)

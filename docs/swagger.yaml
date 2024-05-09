@@ -71,6 +71,24 @@ paths:
       summary: CreateHistoryData
       tags:
       - gemini-history
+  /gemini-history/history-data/bulk:
+    post:
+      description: create many history data
+      parameters:
+      - description: Request Body
+        in: body
+        name: CreateManyGeminiHistory
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/request.GeminiHistory'
+          type: array
+      produces:
+      - application/json
+      responses: {}
+      summary: CreateManyHistoryData
+      tags:
+      - gemini-history
   /gemini/chat:
     post:
       description: chat action API
