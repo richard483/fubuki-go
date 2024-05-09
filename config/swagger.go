@@ -11,8 +11,8 @@ func InitializeSwagger(router *gin.Engine) {
 	docs.SwaggerInfo.Title = "fubuki-go API"
 	docs.SwaggerInfo.Description = "This is API for fubuki AI persona"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.Host = EnvHost()
 	docs.SwaggerInfo.BasePath = "/"
-	
+
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
