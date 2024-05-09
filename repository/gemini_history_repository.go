@@ -19,6 +19,11 @@ func (r *GeminiHistoryRepository) Create(history *model.History) error {
 	return result.Error
 }
 
+func (r *GeminiHistoryRepository) CreateMany(histories *[]model.History) error {
+	result := r.DB.Create(&histories)
+	return result.Error
+}
+
 func (r *GeminiHistoryRepository) GetAll() []model.History {
 	var histories []model.History
 	result := r.DB.Find(&histories)
