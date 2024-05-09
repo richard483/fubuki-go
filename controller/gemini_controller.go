@@ -49,7 +49,7 @@ func (ctr *GeminiController) PromptText(c *gin.Context) {
 	res := response.DefaultResponse{
 		StatusCode: http.StatusOK,
 		Message:    http.StatusText(http.StatusOK),
-		Data:       *data,
+		Data:       &response.GeminiTextData{Text: (*data)[0]},
 	}
 	c.JSON(http.StatusOK, res)
 	return
@@ -76,6 +76,34 @@ func (ctr *GeminiController) Chat(c *gin.Context) {
 	}
 
 	err, data := ctr.GeminiServiceInterface.Chat(&prompt)
+	if err != nil {
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	res := response.DefaultResponse{
+		StatusCode: http.StatusOK,
+		Message:    http.StatusText(http.StatusOK),
+		Data:       &response.GeminiTextData{Text: (*data)[0]},
+	}
+	c.JSON(http.StatusOK, res)
+	return
+}
+
+// TuneModel godoc
+// @Summary      TuneModel
+// @Description  tune gemini model with history data
+// @Tags         gemini
+// @Consume      json
+// @Produce      json
+// @Router       /gemini/tune [get]
+func (ctr *GeminiController) TuneModel(c *gin.Context) {
+
+	err, data := ctr.GeminiServiceInterface.TuneModel()
 	if err != nil {
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,

@@ -17,3 +17,14 @@ type GeminiCandidate struct {
 type GeminiCandidates struct {
 	Candidates []GeminiCandidate `json:"candidates,omitempty" binding:"required"`
 }
+
+type GeminiTuneMetadata struct {
+	Type       string `json:"@type,omitempty" binding:"required"`
+	TotalSteps int    `json:"totalSteps,omitempty" binding:"required"`
+	TunedModel string `json:"tunedModel,omitempty" binding:"required"`
+}
+
+type GeminiTunedModel struct {
+	Name     string             `json:"name,omitempty" binding:"required"`
+	Metadata GeminiTuneMetadata `json:"metadata,omitempty" binding:"required"`
+}

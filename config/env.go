@@ -22,3 +22,20 @@ func EnvGeminiAPI() bool {
 	}
 	return res
 }
+
+func EnvGoogleProjectId() string {
+	return os.Getenv("GOOGLE_PROJECT_ID")
+}
+
+func EnvGoogleAccessToken() string {
+	return os.Getenv("GOOGLE_ACCESS_TOKEN")
+}
+
+func EnvRetrieveHistory() bool {
+	res, err := strconv.ParseBool(os.Getenv("RETRIEVE_HISTORY"))
+	if err != nil {
+		log.Fatalln(err)
+		return false
+	}
+	return res
+}
