@@ -81,6 +81,7 @@ func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, *[]string) {
 	resp, err := cs.SendMessage(ctx, genai.Text(prompt.Text))
 
 	if err != nil {
+		cs.History = cs.History[:len(cs.History)-1]
 		return err, nil
 	}
 
@@ -179,6 +180,18 @@ func (srv *GeminiService) geminiModel() *genai.GenerativeModel {
 		geminiModel.SafetySettings = []*genai.SafetySetting{
 			{
 				Category:  genai.HarmCategoryHarassment,
+				Threshold: genai.HarmBlockNone,
+			},
+			{
+				Category:  genai.HarmCategoryHateSpeech,
+				Threshold: genai.HarmBlockNone,
+			},
+			{
+				Category:  genai.HarmCategoryDangerousContent,
+				Threshold: genai.HarmBlockNone,
+			},
+			{
+				Category:  genai.HarmCategorySexuallyExplicit,
 				Threshold: genai.HarmBlockNone,
 			},
 		}

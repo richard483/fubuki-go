@@ -118,6 +118,9 @@ func (srv *GeminiApiService) Chat(prompt *request.GeminiText) (error, *[]string)
 			results = append(results, string(part.Text))
 		}
 	}
+	if len(results) == 0 {
+		return errors.New(fmt.Sprintf("Zero response")), nil
+	}
 
 	content = extRequest.GeminiContent{
 		Parts: &[]extRequest.GeminiPart{{
