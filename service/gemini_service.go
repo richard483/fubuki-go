@@ -176,6 +176,12 @@ func (srv *GeminiService) TuneModel() (error, *request2.GeminiTunedModel) {
 func (srv *GeminiService) geminiModel() *genai.GenerativeModel {
 	if geminiModel == nil {
 		geminiModel = srv.Client.GenerativeModel("gemini-pro")
+		geminiModel.SafetySettings = []*genai.SafetySetting{
+			{
+				Category:  genai.HarmCategoryHarassment,
+				Threshold: genai.HarmBlockNone,
+			},
+		}
 	}
 	return geminiModel
 }
