@@ -30,6 +30,11 @@ func NewGeminiApiService(client *genai.Client, repository repository.GeminiHisto
 	return &GeminiApiService{client, repository}
 }
 
+func (srv *GeminiApiService) ResetSession() (error, string) {
+	historyContent = nil
+	return nil, "ok"
+}
+
 func (srv *GeminiApiService) PromptText(prompt *request.GeminiText) (error, *[]string) {
 	if geminiDefaultService == nil {
 		geminiDefaultService = NewGeminiService(srv.Client, srv.GeminiHistoryRepositoryInterface)

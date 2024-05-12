@@ -29,6 +29,12 @@ func NewGeminiService(client *genai.Client, repository repository.GeminiHistoryR
 var geminiModel *genai.GenerativeModel
 var chatSession *genai.ChatSession
 
+func (srv *GeminiService) ResetSession() (error, string) {
+	geminiModel = nil
+	chatSession = nil
+	return nil, "ok"
+}
+
 func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, *[]string) {
 	ctx := context.TODO()
 	model := srv.geminiModel()

@@ -9,4 +9,5 @@ type GeminiServiceInterface interface {
 	PromptText(prompt *request.GeminiText) (error, *[]string)
 	Chat(prompt *request.GeminiText) (error, *[]string)
 	TuneModel() (error, *request2.GeminiTunedModel)
+	ResetSession() (error, string)
 }
