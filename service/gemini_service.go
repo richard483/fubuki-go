@@ -29,6 +29,12 @@ func NewGeminiService(client *genai.Client, repository repository.GeminiHistoryR
 var geminiModel *genai.GenerativeModel
 var chatSession *genai.ChatSession
 
+func (srv *GeminiService) ResetSession() (error, string) {
+	geminiModel = nil
+	chatSession = nil
+	return nil, "ok"
+}
+
 func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, *[]string) {
 	ctx := context.TODO()
 	model := srv.geminiModel()
@@ -81,6 +87,7 @@ func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, *[]string) {
 	resp, err := cs.SendMessage(ctx, genai.Text(prompt.Text))
 
 	if err != nil {
+		cs.History = cs.History[:len(cs.History)-1]
 		return err, nil
 	}
 
@@ -176,6 +183,24 @@ func (srv *GeminiService) TuneModel() (error, *request2.GeminiTunedModel) {
 func (srv *GeminiService) geminiModel() *genai.GenerativeModel {
 	if geminiModel == nil {
 		geminiModel = srv.Client.GenerativeModel("gemini-pro")
+		geminiModel.SafetySettings = []*genai.SafetySetting{
+			{
+				Category:  genai.HarmCategoryHarassment,
+				Threshold: genai.HarmBlockNone,
+			},
+			{
+				Category:  genai.HarmCategoryHateSpeech,
+				Threshold: genai.HarmBlockNone,
+			},
+			{
+				Category:  genai.HarmCategoryDangerousContent,
+				Threshold: genai.HarmBlockNone,
+			},
+			{
+				Category:  genai.HarmCategorySexuallyExplicit,
+				Threshold: genai.HarmBlockNone,
+			},
+		}
 	}
 	return geminiModel
 }

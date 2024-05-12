@@ -166,6 +166,19 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/gemini/reset": {
+            "get": {
+                "description": "for resetting all chat session",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "gemini"
+                ],
+                "summary": "Reset chat session",
+                "responses": {}
+            }
+        },
         "/gemini/tune": {
             "get": {
                 "description": "tune gemini model with history data",

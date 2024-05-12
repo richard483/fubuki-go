@@ -30,6 +30,11 @@ func NewGeminiApiService(client *genai.Client, repository repository.GeminiHisto
 	return &GeminiApiService{client, repository}
 }
 
+func (srv *GeminiApiService) ResetSession() (error, string) {
+	historyContent = nil
+	return nil, "ok"
+}
+
 func (srv *GeminiApiService) PromptText(prompt *request.GeminiText) (error, *[]string) {
 	if geminiDefaultService == nil {
 		geminiDefaultService = NewGeminiService(srv.Client, srv.GeminiHistoryRepositoryInterface)
@@ -117,6 +122,9 @@ func (srv *GeminiApiService) Chat(prompt *request.GeminiText) (error, *[]string)
 		for _, part := range candidate.Content.Parts {
 			results = append(results, string(part.Text))
 		}
+	}
+	if len(results) == 0 {
+		return errors.New(fmt.Sprintf("Zero response")), nil
 	}
 
 	content = extRequest.GeminiContent{

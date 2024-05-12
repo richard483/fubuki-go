@@ -121,6 +121,15 @@ paths:
       summary: Prompt Text
       tags:
       - gemini
+  /gemini/reset:
+    get:
+      description: for resetting all chat session
+      produces:
+      - application/json
+      responses: {}
+      summary: Reset chat session
+      tags:
+      - gemini
   /gemini/tune:
     get:
       description: tune gemini model with history data

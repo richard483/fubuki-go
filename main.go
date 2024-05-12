@@ -18,6 +18,10 @@ import (
 
 func main() {
 
+	//"github.com/joho/godotenv"
+	//if err := godotenv.Load(); err != nil {
+	//	log.Fatalln(err)
+	//}
 	db := config.NewDbConnection()
 	if err := db.AutoMigrate(&model.History{}); err != nil {
 		log.Fatalln(err)
