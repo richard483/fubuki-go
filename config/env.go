@@ -43,3 +43,12 @@ func EnvRetrieveHistory() bool {
 	}
 	return res
 }
+
+func EnvReleaseMode() bool {
+	res, err := strconv.ParseBool(os.Getenv("RELEASE_MODE"))
+	if err != nil {
+		log.Fatalln(err)
+		return false
+	}
+	return res
+}
