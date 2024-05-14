@@ -9,6 +9,6 @@ type GeminiHistoryServiceInterface interface {
 	CreateHistoryData(historyData *request.GeminiHistory) error
 	CreateManyHistoryData(historiesData *[]request.GeminiHistory) error
 	GetAllHistoryData() *[]model.History
-	UpdateHistoryData(historyData *request.GeminiHistory) error
+	UpdateHistoryData(historyData *request.UpdateGeminiHistory) error
 	DeleteHistoryData(id string) error
 }

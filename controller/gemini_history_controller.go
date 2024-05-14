@@ -119,10 +119,10 @@ func (ctr *GeminiHistoryController) GetAllHistoryData(c *gin.Context) {
 // @Tags         gemini-history
 // @Consume      json
 // @Produce      json
-// @Param        UpdateGeminiHistory body request.GeminiHistory true "Request Body"
+// @Param        UpdateGeminiHistory body request.UpdateGeminiHistory true "Request Body"
 // @Router       /gemini-history/history-data [patch]
 func (ctr *GeminiHistoryController) UpdateHistoryData(c *gin.Context) {
-	var historyData request.GeminiHistory
+	var historyData request.UpdateGeminiHistory
 	if err := c.Bind(&historyData); err != nil {
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,

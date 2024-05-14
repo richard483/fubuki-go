@@ -42,8 +42,9 @@ func (srv *GeminiHistoryService) GetAllHistoryData() *[]model.History {
 	return &results
 }
 
-func (srv *GeminiHistoryService) UpdateHistoryData(historyData *request.GeminiHistory) error {
+func (srv *GeminiHistoryService) UpdateHistoryData(historyData *request.UpdateGeminiHistory) error {
 	err := srv.Repository.Update(&model.History{
+		ID:           historyData.ID,
 		UserQuestion: historyData.UserQuestion,
 		ModelAnswer:  historyData.ModelAnswer,
 	})
