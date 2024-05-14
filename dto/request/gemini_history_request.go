@@ -7,6 +7,6 @@ type GeminiHistory struct {
 
 type UpdateGeminiHistory struct {
 	ID           uint   `json:"id" binding:"required" validate:"required"`
-	UserQuestion string `json:"question" binding:"required" validate:"required"`
-	ModelAnswer  string `json:"answer" binding:"required" validate:"required"`
+	UserQuestion string `json:"question" validate:"required"`
+	ModelAnswer  string `json:"answer" validate:"required"`
 }
