@@ -13,9 +13,6 @@ func New(helloWorldController *controller.HelloWorldController, geminiController
 	}
 
 	router := gin.Default()
-	router.Use(gin.Logger())
-	router.Use(gin.Recovery())
-
 	config.InitializeSwagger(router)
 
 	misc := router.Group("/")
