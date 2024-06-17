@@ -29,7 +29,7 @@ func (r *GeminiHistoryRepository) GetAll() []model.History {
 	result := r.DB.Find(&histories)
 
 	if err := result.Error; err != nil {
-		log.Fatalln(err)
+		log.Println("#ERROR " + err.Error())
 	}
 
 	return histories

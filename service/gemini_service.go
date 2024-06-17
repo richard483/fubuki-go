@@ -163,7 +163,7 @@ func (srv *GeminiService) TuneModel() (error, *request2.GeminiTunedModel) {
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			log.Fatalln(err)
+			log.Println("#ERROR " + err.Error())
 		}
 	}(resp.Body)
 
