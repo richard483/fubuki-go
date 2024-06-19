@@ -17,7 +17,7 @@ func EnvPostgresURI() string {
 func EnvGeminiAPI() bool {
 	res, err := strconv.ParseBool(os.Getenv("GEMINI_API"))
 	if err != nil {
-		log.Fatalln(err)
+		log.Println("#ERROR " + err.Error())
 		return false
 	}
 	return res
@@ -38,7 +38,16 @@ func EnvGoogleAccessToken() string {
 func EnvRetrieveHistory() bool {
 	res, err := strconv.ParseBool(os.Getenv("RETRIEVE_HISTORY"))
 	if err != nil {
-		log.Fatalln(err)
+		log.Println("#ERROR " + err.Error())
+		return false
+	}
+	return res
+}
+
+func EnvReleaseMode() bool {
+	res, err := strconv.ParseBool(os.Getenv("RELEASE_MODE"))
+	if err != nil {
+		log.Println("#ERROR " + err.Error())
 		return false
 	}
 	return res

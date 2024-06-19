@@ -20,24 +20,24 @@ func main() {
 
 	//"github.com/joho/godotenv"
 	//if err := godotenv.Load(); err != nil {
-	//	log.Fatalln(err)
+	//	log.Println("#ERROR " + err.Error())
 	//}
 	db := config.NewDbConnection()
 	if err := db.AutoMigrate(&model.History{}); err != nil {
-		log.Fatalln(err)
+		log.Println("#ERROR " + err.Error())
 	}
 
 	ctx := context.TODO()
 	client, err := genai.NewClient(ctx, option.WithAPIKey(config.EnvGeminiApiKey()))
 
 	if err != nil {
-		log.Fatalln(err)
+		log.Println("#ERROR " + err.Error())
 	}
 
 	defer func(client *genai.Client) {
 		err := client.Close()
 		if err != nil {
-			log.Fatalln(err)
+			log.Println("#ERROR " + err.Error())
 		}
 	}(client)
 

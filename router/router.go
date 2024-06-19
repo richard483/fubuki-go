@@ -8,8 +8,11 @@ import (
 
 func New(helloWorldController *controller.HelloWorldController, geminiController *controller.GeminiController, geminiHistoryController *controller.GeminiHistoryController) *gin.Engine {
 
-	router := gin.Default()
+	if config.EnvReleaseMode() {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
+	router := gin.Default()
 	config.InitializeSwagger(router)
 
 	misc := router.Group("/")

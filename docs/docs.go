@@ -84,7 +84,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.GeminiHistory"
+                            "$ref": "#/definitions/request.UpdateGeminiHistory"
                         }
                     }
                 ],
@@ -216,6 +216,25 @@ const docTemplate = `{
             ],
             "properties": {
                 "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.UpdateGeminiHistory": {
+            "type": "object",
+            "required": [
+                "answer",
+                "id",
+                "question"
+            ],
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "question": {
                     "type": "string"
                 }
             }

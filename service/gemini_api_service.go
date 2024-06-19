@@ -102,7 +102,7 @@ func (srv *GeminiApiService) Chat(prompt *request.GeminiText) (error, *[]string)
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			log.Fatalln(err)
+			log.Println("#ERROR " + err.Error())
 		}
 	}(resp.Body)
 
