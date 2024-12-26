@@ -64,11 +64,11 @@ func main() {
 	route := router.New(helloWorldController, geminiController, geminiHistoryController)
 
 	server := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":" + config.EnvPort(),
 		Handler: route,
 	}
 
-	log.Println("Swagger served on http://localhost:8080/swagger/index.html")
+	log.Println("Swagger served on http://localhost:" + config.EnvPort() + "/swagger/index.html")
 
 	serverError := server.ListenAndServe()
 

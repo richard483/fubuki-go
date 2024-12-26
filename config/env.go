@@ -52,3 +52,7 @@ func EnvReleaseMode() bool {
 	}
 	return res
 }
+
+func EnvPort() string {
+	return os.Getenv("PORT")
+}
