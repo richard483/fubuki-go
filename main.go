@@ -19,9 +19,10 @@ import (
 func main() {
 
 	//"github.com/joho/godotenv"
-	//if err := godotenv.Load(); err != nil {
-	//	log.Println("#ERROR " + err.Error())
-	//}
+	if err := godotenv.Load(); err != nil {
+		log.Println("#ERROR " + err.Error())
+	}
+	
 	db := config.NewDbConnection()
 	if err := db.AutoMigrate(&model.History{}); err != nil {
 		log.Println("#ERROR " + err.Error())
