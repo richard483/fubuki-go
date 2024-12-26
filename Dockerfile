@@ -11,6 +11,14 @@ ARG GOOGLE_ACCESS_TOKEN
 ARG RETRIEVE_HISTORY
 ARG RELEASE_MODE
 
+WORKDIR /app
+COPY . .
+RUN go mod download
+RUN go build -o ./fbk-go ./main.go
+
+
+FROM alpine:latest AS runner
+
 ENV PORT=$PORT
 ENV GEMINI_API_KEY=$GEMINI_API_KEY
 ENV POSTGRES_URI=$POSTGRES_URI
@@ -21,14 +29,6 @@ ENV GOOGLE_ACCESS_TOKEN=$GOOGLE_ACCESS_TOKEN
 ENV RETRIEVE_HISTORY=$RETRIEVE_HISTORY
 ENV RELEASE_MODE=$RELEASE_MODE
 
-
-WORKDIR /app
-COPY . .
-RUN go mod download
-RUN go build -o ./fbk-go ./main.go
-
-
-FROM alpine:latest AS runner
 WORKDIR /app
 COPY --from=builder /app/fbk-go .
 EXPOSE $PORT
