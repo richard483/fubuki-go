@@ -4,6 +4,7 @@ GlobalPipeline() {
 	dockerImage = "fbk-go:latest"
 	projectName = "fbk-go"
 	appPort = "234"
+    networkName = "fubuki"
     buildArgs = [
         PORT: appPort,
         GEMINI_API_KEY: "\"${this.env.GEMINI_API_KEY}\"",
@@ -14,6 +15,5 @@ GlobalPipeline() {
         GOOGLE_ACCESS_TOKEN: "\"${this.env.GOOGLE_ACCESS_TOKEN}\"",
         RETRIEVE_HISTORY: "true",
         RELEASE_MODE: "true"
-        // MAX_CHAT_HISTORY: "100",
     ]
 }
