@@ -1,3 +1,7 @@
+To update all dependencies:
+`go get -u ./...`
+`go mod tidy`
+
 To install dependencies:
 `go mod tidy`
 
