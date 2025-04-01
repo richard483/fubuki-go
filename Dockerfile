@@ -29,6 +29,8 @@ RUN go build -o ./fbk-go ./main.go
 
 FROM alpine:latest AS runner
 
+RUN apk add --no-cache bash
+
 ARG PORT=8080
 ARG GEMINI_API_KEY
 ARG POSTGRES_URI
