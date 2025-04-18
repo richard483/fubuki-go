@@ -25,7 +25,6 @@ func New(helloWorldController *controller.HelloWorldController, geminiController
 	{
 		gemini.POST("/prompt-text", geminiController.PromptText)
 		gemini.POST("/chat", geminiController.Chat)
-		gemini.GET("/tune", geminiController.TuneModel)
 		gemini.GET("/reset", geminiController.ResetSession)
 	}
 

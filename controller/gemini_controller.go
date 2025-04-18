@@ -99,35 +99,6 @@ func (ctr *GeminiController) Chat(c *gin.Context) {
 	return
 }
 
-// TuneModel godoc
-// @Summary      TuneModel
-// @Description  tune gemini model with history data
-// @Tags         gemini
-// @Consume      json
-// @Produce      json
-// @Router       /gemini/tune [get]
-func (ctr *GeminiController) TuneModel(c *gin.Context) {
-
-	err, data := ctr.GeminiServiceInterface.TuneModel()
-	if err != nil {
-		log.Println(err)
-		res := response.DefaultResponse{
-			StatusCode: http.StatusBadRequest,
-			Message:    http.StatusText(http.StatusBadRequest),
-			Error:      err.Error(),
-		}
-		c.JSON(http.StatusBadRequest, res)
-		return
-	}
-	res := response.DefaultResponse{
-		StatusCode: http.StatusOK,
-		Message:    http.StatusText(http.StatusOK),
-		Data:       *data,
-	}
-	c.JSON(http.StatusOK, res)
-	return
-}
-
 // ResetSession godoc
 // @Summary      Reset chat session
 // @Description  for resetting all chat session

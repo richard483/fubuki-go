@@ -8,7 +8,6 @@ import (
 	"fubuki-go/repository"
 	"fubuki-go/router"
 	"fubuki-go/service"
-	"fubuki-go/service_interface"
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/option"
 	"log"
@@ -18,10 +17,6 @@ import (
 
 func main() {
 
-	//"github.com/joho/godotenv"
-	//if err := godotenv.Load(); err != nil {
-	//	log.Println("#ERROR " + err.Error())
-	//}
 	db := config.NewDbConnection()
 	if err := db.AutoMigrate(&model.History{}); err != nil {
 		log.Println("#ERROR " + err.Error())
@@ -42,16 +37,7 @@ func main() {
 	}(client)
 
 	geminiHistoryRepository := repository.NewGeminiHistoryRepository(db)
-
-	// temporary solution for genai golang library bug
-	var geminiService service_interface.GeminiServiceInterface
-
-	if config.EnvGeminiAPI() {
-		geminiService = service.NewGeminiApiService(client, geminiHistoryRepository)
-	} else {
-		geminiService = service.NewGeminiService(client, geminiHistoryRepository)
-	}
-
+	geminiService := service.NewGeminiService(client, geminiHistoryRepository)
 	helloWorldService := service.NewHelloWorldService()
 	geminiHistoryService := service.NewGeminiHistoryService(geminiHistoryRepository)
 

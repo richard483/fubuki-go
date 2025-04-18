@@ -143,13 +143,4 @@ paths:
       summary: Reset chat session
       tags:
       - gemini
-  /gemini/tune:
-    get:
-      description: tune gemini model with history data
-      produces:
-      - application/json
-      responses: {}
-      summary: TuneModel
-      tags:
-      - gemini
 swagger: "2.0"
