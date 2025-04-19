@@ -6,7 +6,10 @@ RUN go build -o ./fbk-go ./main.go
 
 
 FROM alpine:latest AS runner
+
+RUN apk add --no-cache bash
+
 WORKDIR /app
 COPY --from=builder /app/fbk-go .
-EXPOSE 8080
+EXPOSE $PORT
 ENTRYPOINT ["./fbk-go"]
