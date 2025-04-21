@@ -3,7 +3,7 @@
 GlobalPipeline() {
 	dockerImage = "fbk-go-canary:latest"
 	projectName = "fbk-go-canary"
-	appPort = "234"
+	appPort = "2334"
     networkName = "fubuki"
     buildArgs = [
         PORT: appPort,
