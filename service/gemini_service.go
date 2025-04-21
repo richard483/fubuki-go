@@ -5,6 +5,7 @@ import (
 	"fubuki-go/config"
 	"fubuki-go/dto/request"
 	repository "fubuki-go/repository_interface"
+
 	"github.com/google/generative-ai-go/genai"
 )
 
@@ -99,7 +100,7 @@ func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, *[]string) {
 
 func (srv *GeminiService) geminiModel() *genai.GenerativeModel {
 	if geminiModel == nil {
-		geminiModel = srv.Client.GenerativeModel("gemini-2.0-flash")
+		geminiModel = srv.Client.GenerativeModel(config.EnvGeminiModel())
 		geminiModel.SafetySettings = []*genai.SafetySetting{
 			{
 				Category:  genai.HarmCategoryHarassment,

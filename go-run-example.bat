@@ -1,6 +1,7 @@
-set GEMINI_API_KEY=example-value
-set POSTGRES_URI=example-value
-set HOST=example-value
-set RETRIEVE_HISTORY=example-value
-set RELEASE_MODE=example-value
+set GEMINI_API_KEY=example_value
+set POSTGRES_URI=example_value
+set HOST=example_value
+set RETRIEVE_HISTORY=example_value
+set RELEASE_MODE=example_value
+set GEMINI_MODEL=example_value
 go run main.go

@@ -39,3 +39,7 @@ func EnvReleaseMode() bool {
 func EnvPort() string {
 	return os.Getenv("PORT")
 }
+
+func EnvGeminiModel() string {
+	return os.Getenv("GEMINI_MODEL")
+}
