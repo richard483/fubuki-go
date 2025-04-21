@@ -1,6 +1,15 @@
 FROM golang:1.24.1-alpine AS builder
 
 # default 8080
+
+WORKDIR /app
+COPY . .
+RUN go mod download
+RUN go build -o ./fbk-go ./main.go
+
+
+FROM alpine:latest AS runner
+
 ARG PORT=8080
 ARG GEMINI_API_KEY
 ARG POSTGRES_URI
@@ -16,14 +25,6 @@ ENV HOST=$HOST
 ENV RETRIEVE_HISTORY=$RETRIEVE_HISTORY
 ENV RELEASE_MODE=$RELEASE_MODE
 ENV GEMINI_MODEL=$GEMINI_MODEL
-
-WORKDIR /app
-COPY . .
-RUN go mod download
-RUN go build -o ./fbk-go ./main.go
-
-
-FROM alpine:latest AS runner
 
 WORKDIR /app
 COPY --from=builder /app/fbk-go .
