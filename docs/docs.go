@@ -178,19 +178,6 @@ const docTemplate = `{
                 "summary": "Reset chat session",
                 "responses": {}
             }
-        },
-        "/gemini/tune": {
-            "get": {
-                "description": "tune gemini model with history data",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "gemini"
-                ],
-                "summary": "TuneModel",
-                "responses": {}
-            }
         }
     },
     "definitions": {
