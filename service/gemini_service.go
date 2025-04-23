@@ -12,10 +12,11 @@ import (
 type GeminiService struct {
 	*genai.Client
 	repository.GeminiHistoryRepositoryInterface
+	repository.ChatCacheRepositoryInterface
 }
 
-func NewGeminiService(client *genai.Client, repository repository.GeminiHistoryRepositoryInterface) *GeminiService {
-	return &GeminiService{client, repository}
+func NewGeminiService(client *genai.Client, repository repository.GeminiHistoryRepositoryInterface, chatCache repository.ChatCacheRepositoryInterface) *GeminiService {
+	return &GeminiService{client, repository, chatCache}
 }
 
 var geminiModel *genai.GenerativeModel

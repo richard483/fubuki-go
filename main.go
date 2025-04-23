@@ -8,9 +8,11 @@ import (
 	"fubuki-go/repository"
 	"fubuki-go/router"
 	"fubuki-go/service"
-	"github.com/google/generative-ai-go/genai"
-	"google.golang.org/api/option"
 	"log"
+
+	"github.com/google/generative-ai-go/genai"
+	"github.com/redis/go-redis/v9"
+	"google.golang.org/api/option"
 
 	"net/http"
 )
@@ -21,6 +23,13 @@ func main() {
 	if err := db.AutoMigrate(&model.History{}); err != nil {
 		log.Println("#ERROR " + err.Error())
 	}
+
+	opts, err := redis.ParseURL(config.EnvRedisURI())
+	if err != nil {
+		log.Println("#ERROR " + err.Error())
+	}
+
+	redisClient := redis.NewClient(opts)
 
 	ctx := context.TODO()
 	client, err := genai.NewClient(ctx, option.WithAPIKey(config.EnvGeminiApiKey()))
@@ -37,7 +46,9 @@ func main() {
 	}(client)
 
 	geminiHistoryRepository := repository.NewGeminiHistoryRepository(db)
-	geminiService := service.NewGeminiService(client, geminiHistoryRepository)
+	chatCacheRepository := repository.NewChatCacheRepository(redisClient)
+
+	geminiService := service.NewGeminiService(client, geminiHistoryRepository, chatCacheRepository)
 	helloWorldService := service.NewHelloWorldService()
 	geminiHistoryService := service.NewGeminiHistoryService(geminiHistoryRepository)
 
