@@ -20,7 +20,10 @@ func NewChatCacheRepository(client *redis.Client, ctx context.Context) *ChatCach
 func (r *ChatCacheRepository) AppendChatStream(key string, value model.Chat) error {
 	_, err := r.redisClient.XAdd(r.Context, &redis.XAddArgs{
 		Stream: key,
-		Values: value,
+		Values: map[string]interface{}{
+			"UserQuestion": value.UserQuestion,
+			"ModelAnswer":  value.ModelAnswer,
+		},
 		MaxLen: 100,
 	}).Result()
 

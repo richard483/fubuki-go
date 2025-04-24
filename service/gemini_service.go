@@ -4,6 +4,7 @@ import (
 	"context"
 	"fubuki-go/config"
 	"fubuki-go/dto/request"
+	modelDto "fubuki-go/model"
 	repository "fubuki-go/repository_interface"
 
 	"github.com/google/generative-ai-go/genai"
@@ -12,7 +13,7 @@ import (
 type GeminiService struct {
 	*genai.Client
 	repository.GeminiHistoryRepositoryInterface
-	repository.ChatCacheRepositoryInterface
+	cacheRepository repository.ChatCacheRepositoryInterface
 }
 
 func NewGeminiService(client *genai.Client, repository repository.GeminiHistoryRepositoryInterface, chatCache repository.ChatCacheRepositoryInterface) *GeminiService {
@@ -94,6 +95,15 @@ func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, *[]string) {
 				}
 			}
 		}
+	}
+
+	cacheErr := srv.cacheRepository.AppendChatStream("gemini", modelDto.Chat{
+		UserQuestion: prompt.Text,
+		ModelAnswer:  results[0],
+	})
+
+	if cacheErr != nil {
+		return cacheErr, nil
 	}
 
 	return nil, &results
