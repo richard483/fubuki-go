@@ -46,7 +46,7 @@ func main() {
 	}(client)
 
 	geminiHistoryRepository := repository.NewGeminiHistoryRepository(db)
-	chatCacheRepository := repository.NewChatCacheRepository(redisClient)
+	chatCacheRepository := repository.NewChatCacheRepository(redisClient, ctx)
 
 	geminiService := service.NewGeminiService(client, geminiHistoryRepository, chatCacheRepository)
 	helloWorldService := service.NewHelloWorldService()
