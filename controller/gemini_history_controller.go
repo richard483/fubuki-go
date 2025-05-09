@@ -5,8 +5,9 @@ import (
 	"fubuki-go/dto/response"
 	"fubuki-go/service"
 	"fubuki-go/service_interface"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type GeminiHistoryController struct {
@@ -53,7 +54,6 @@ func (ctr *GeminiHistoryController) CreateHistoryData(c *gin.Context) {
 		Data:       "Success created history data",
 	}
 	c.JSON(http.StatusOK, res)
-	return
 }
 
 // CreateManyHistoryData godoc
@@ -92,7 +92,6 @@ func (ctr *GeminiHistoryController) CreateManyHistoryData(c *gin.Context) {
 		Data:       "Success created bulk history data",
 	}
 	c.JSON(http.StatusOK, res)
-	return
 }
 
 // GetAllHistoryData godoc
@@ -110,7 +109,6 @@ func (ctr *GeminiHistoryController) GetAllHistoryData(c *gin.Context) {
 		Data:       data,
 	}
 	c.JSON(http.StatusOK, res)
-	return
 }
 
 // UpdateHistoryData godoc
@@ -148,7 +146,6 @@ func (ctr *GeminiHistoryController) UpdateHistoryData(c *gin.Context) {
 		Data:       "Success updated history data",
 	}
 	c.JSON(http.StatusOK, res)
-	return
 }
 
 // DeleteHistoryData godoc
@@ -189,5 +186,4 @@ func (ctr *GeminiHistoryController) DeleteHistoryData(c *gin.Context) {
 		Data:       "Success updated history data",
 	}
 	c.JSON(http.StatusOK, res)
-	return
 }

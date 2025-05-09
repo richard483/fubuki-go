@@ -9,24 +9,19 @@ import (
 	"fubuki-go/dto/request"
 	"fubuki-go/dto/request_ext"
 	"fubuki-go/dto/response_ext"
-	repository "fubuki-go/repository_interface"
 	"io"
 	"log"
 	"net/http"
-
-	"github.com/google/generative-ai-go/genai"
 )
 
 type OllamaService struct {
-	*genai.Client
-	repository.GeminiHistoryRepositoryInterface
 }
 
-func NewOllamaService(client *genai.Client, repository repository.GeminiHistoryRepositoryInterface) *GeminiService {
-	return &GeminiService{client, repository}
+func NewOllamaService() *OllamaService {
+	return &OllamaService{}
 }
 
-func (srv *GeminiService) PromptOllamaText(prompt *request.PromptText) (*response_ext.OllamaGenerateResponse, error) {
+func (srv *OllamaService) PromptOllamaText(prompt *request.PromptText) (*response_ext.OllamaGenerateResponse, error) {
 	url := config.OllamaHost() + "/api/generate"
 	ollamaGenerateRequest := request_ext.OllamaGenerateRequest{
 		Model:  prompt.Model,
@@ -42,6 +37,10 @@ func (srv *GeminiService) PromptOllamaText(prompt *request.PromptText) (*respons
 
 	httpClient := &http.Client{}
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer((jsonRequest)))
+
+	if err != nil {
+		return nil, err
+	}
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")

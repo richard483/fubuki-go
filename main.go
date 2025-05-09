@@ -8,9 +8,10 @@ import (
 	"fubuki-go/repository"
 	"fubuki-go/router"
 	"fubuki-go/service"
+	"log"
+
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/option"
-	"log"
 
 	"net/http"
 )
@@ -40,12 +41,14 @@ func main() {
 	geminiService := service.NewGeminiService(client, geminiHistoryRepository)
 	helloWorldService := service.NewHelloWorldService()
 	geminiHistoryService := service.NewGeminiHistoryService(geminiHistoryRepository)
+	ollamaService := service.NewOllamaService()
 
 	helloWorldController := controller.NewHelloWorldController(helloWorldService)
 	geminiController := controller.NewGeminiController(geminiService)
 	geminiHistoryController := controller.NewGeminiHistoryController(geminiHistoryService)
+	ollamaController := controller.NewOllamaController(ollamaService)
 
-	route := router.New(helloWorldController, geminiController, geminiHistoryController)
+	route := router.New(helloWorldController, geminiController, geminiHistoryController, ollamaController)
 
 	server := &http.Server{
 		Addr:    ":" + config.EnvPort(),

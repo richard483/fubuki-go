@@ -24,7 +24,7 @@ func NewGeminiController(service service_interface.GeminiServiceInterface) *Gemi
 // @Tags         gemini
 // @Consume      json
 // @Produce      json
-// @Param        GeminiText body request.GeminiText true "Request Body"
+// @Param        PromptText body request.PromptText true "Request Body"
 // @Router       /gemini/prompt-text [post]
 func (ctr *GeminiController) PromptText(c *gin.Context) {
 	var prompt request.PromptText
@@ -53,10 +53,9 @@ func (ctr *GeminiController) PromptText(c *gin.Context) {
 	res := response.DefaultResponse{
 		StatusCode: http.StatusOK,
 		Message:    http.StatusText(http.StatusOK),
-		Data:       &response.GeminiTextData{Text: (*data)[0]},
+		Data:       &response.PromptTextData{Text: (*data)[0]},
 	}
 	c.JSON(http.StatusOK, res)
-	return
 }
 
 // Chat godoc
@@ -65,7 +64,7 @@ func (ctr *GeminiController) PromptText(c *gin.Context) {
 // @Tags         gemini
 // @Consume      json
 // @Produce      json
-// @Param        GeminiText body request.GeminiText true "Request Body"
+// @Param        PromptText body request.PromptText true "Request Body"
 // @Router       /gemini/chat [post]
 func (ctr *GeminiController) Chat(c *gin.Context) {
 	var prompt request.PromptText
@@ -94,10 +93,9 @@ func (ctr *GeminiController) Chat(c *gin.Context) {
 	res := response.DefaultResponse{
 		StatusCode: http.StatusOK,
 		Message:    http.StatusText(http.StatusOK),
-		Data:       &response.GeminiTextData{Text: (*data)[0]},
+		Data:       &response.PromptTextData{Text: (*data)[0]},
 	}
 	c.JSON(http.StatusOK, res)
-	return
 }
 
 // ResetSession godoc
@@ -123,8 +121,7 @@ func (ctr *GeminiController) ResetSession(c *gin.Context) {
 	res := response.DefaultResponse{
 		StatusCode: http.StatusOK,
 		Message:    http.StatusText(http.StatusOK),
-		Data:       &response.GeminiTextData{Text: data},
+		Data:       &response.PromptTextData{Text: data},
 	}
 	c.JSON(http.StatusOK, res)
-	return
 }

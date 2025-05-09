@@ -3,6 +3,7 @@ package controller
 import (
 	"fubuki-go/service"
 	"fubuki-go/service_interface"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,5 +17,4 @@ func NewHelloWorldController(service *service.HelloWorldService) *HelloWorldCont
 
 func (ctr *HelloWorldController) HelloWorld(c *gin.Context) {
 	ctr.HelloWorldServiceInterface.HelloWorld(c)
-	return
 }

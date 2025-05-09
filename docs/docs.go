@@ -131,11 +131,11 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Request Body",
-                        "name": "GeminiText",
+                        "name": "PromptText",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.GeminiText"
+                            "$ref": "#/definitions/request.PromptText"
                         }
                     }
                 ],
@@ -155,11 +155,11 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Request Body",
-                        "name": "GeminiText",
+                        "name": "PromptText",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.GeminiText"
+                            "$ref": "#/definitions/request.PromptText"
                         }
                     }
                 ],
@@ -176,6 +176,30 @@ const docTemplate = `{
                     "gemini"
                 ],
                 "summary": "Reset chat session",
+                "responses": {}
+            }
+        },
+        "/ollama/prompt-text": {
+            "post": {
+                "description": "get Ollama prompt text result by defining the model and text",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ollama"
+                ],
+                "summary": "Prompt Ollama Text",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "PromptText",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.PromptText"
+                        }
+                    }
+                ],
                 "responses": {}
             }
         }
@@ -196,12 +220,15 @@ const docTemplate = `{
                 }
             }
         },
-        "request.GeminiText": {
+        "request.PromptText": {
             "type": "object",
             "required": [
                 "text"
             ],
             "properties": {
+                "model": {
+                    "type": "string"
+                },
                 "text": {
                     "type": "string"
                 }

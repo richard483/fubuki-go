@@ -1,5 +1,5 @@
 package response
 
-type GeminiTextData struct {
+type PromptTextData struct {
 	Text string `json:"response,omitempty"`
 }

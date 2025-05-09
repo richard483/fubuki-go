@@ -9,8 +9,10 @@ definitions:
     - answer
     - question
     type: object
-  request.GeminiText:
+  request.PromptText:
     properties:
+      model:
+        type: string
       text:
         type: string
     required:
@@ -108,10 +110,10 @@ paths:
       parameters:
       - description: Request Body
         in: body
-        name: GeminiText
+        name: PromptText
         required: true
         schema:
-          $ref: '#/definitions/request.GeminiText'
+          $ref: '#/definitions/request.PromptText'
       produces:
       - application/json
       responses: {}
@@ -124,10 +126,10 @@ paths:
       parameters:
       - description: Request Body
         in: body
-        name: GeminiText
+        name: PromptText
         required: true
         schema:
-          $ref: '#/definitions/request.GeminiText'
+          $ref: '#/definitions/request.PromptText'
       produces:
       - application/json
       responses: {}
@@ -143,4 +145,20 @@ paths:
       summary: Reset chat session
       tags:
       - gemini
+  /ollama/prompt-text:
+    post:
+      description: get Ollama prompt text result by defining the model and text
+      parameters:
+      - description: Request Body
+        in: body
+        name: PromptText
+        required: true
+        schema:
+          $ref: '#/definitions/request.PromptText'
+      produces:
+      - application/json
+      responses: {}
+      summary: Prompt Ollama Text
+      tags:
+      - ollama
 swagger: "2.0"

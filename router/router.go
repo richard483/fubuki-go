@@ -3,10 +3,11 @@ package router
 import (
 	"fubuki-go/config"
 	"fubuki-go/controller"
+
 	"github.com/gin-gonic/gin"
 )
 
-func New(helloWorldController *controller.HelloWorldController, geminiController *controller.GeminiController, geminiHistoryController *controller.GeminiHistoryController) *gin.Engine {
+func New(helloWorldController *controller.HelloWorldController, geminiController *controller.GeminiController, geminiHistoryController *controller.GeminiHistoryController, ollamaController *controller.OllamaController) *gin.Engine {
 
 	if config.EnvReleaseMode() {
 		gin.SetMode(gin.ReleaseMode)
@@ -26,6 +27,11 @@ func New(helloWorldController *controller.HelloWorldController, geminiController
 		gemini.POST("/prompt-text", geminiController.PromptText)
 		gemini.POST("/chat", geminiController.Chat)
 		gemini.GET("/reset", geminiController.ResetSession)
+	}
+
+	ollama := router.Group("/ollama")
+	{
+		ollama.POST("/prompt-text", ollamaController.PromptOllamaText)
 	}
 
 	geminiHistory := router.Group("/gemini-history")
