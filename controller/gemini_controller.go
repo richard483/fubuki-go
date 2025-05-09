@@ -4,9 +4,10 @@ import (
 	"fubuki-go/dto/request"
 	"fubuki-go/dto/response"
 	"fubuki-go/service_interface"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type GeminiController struct {
@@ -26,7 +27,7 @@ func NewGeminiController(service service_interface.GeminiServiceInterface) *Gemi
 // @Param        GeminiText body request.GeminiText true "Request Body"
 // @Router       /gemini/prompt-text [post]
 func (ctr *GeminiController) PromptText(c *gin.Context) {
-	var prompt request.GeminiText
+	var prompt request.PromptText
 	if err := c.Bind(&prompt); err != nil {
 		log.Println(err)
 		res := response.DefaultResponse{
@@ -67,7 +68,7 @@ func (ctr *GeminiController) PromptText(c *gin.Context) {
 // @Param        GeminiText body request.GeminiText true "Request Body"
 // @Router       /gemini/chat [post]
 func (ctr *GeminiController) Chat(c *gin.Context) {
-	var prompt request.GeminiText
+	var prompt request.PromptText
 	if err := c.Bind(&prompt); err != nil {
 		log.Println(err)
 		res := response.DefaultResponse{

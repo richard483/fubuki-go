@@ -27,7 +27,7 @@ func (srv *GeminiService) ResetSession() (error, string) {
 	return nil, "ok"
 }
 
-func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, *[]string) {
+func (srv *GeminiService) PromptText(prompt *request.PromptText) (error, *[]string) {
 	ctx := context.TODO()
 	model := srv.geminiModel()
 	resp, err := model.GenerateContent(ctx, genai.Text(prompt.Text))
@@ -50,7 +50,7 @@ func (srv *GeminiService) PromptText(prompt *request.GeminiText) (error, *[]stri
 	return nil, &results
 }
 
-func (srv *GeminiService) Chat(prompt *request.GeminiText) (error, *[]string) {
+func (srv *GeminiService) Chat(prompt *request.PromptText) (error, *[]string) {
 	ctx := context.TODO()
 
 	model := srv.geminiModel()

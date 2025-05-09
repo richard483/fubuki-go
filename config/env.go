@@ -11,11 +11,21 @@ func EnvGeminiApiKey() string {
 }
 
 func EnvPostgresURI() string {
-	return os.Getenv("POSTGRES_URI")
+	value, present := os.LookupEnv("POSTGRES_URI")
+	if !present {
+		log.Println("#ERROR POSTGRES_URI not set, using default value")
+		return "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"
+	}
+	return value
 }
 
 func EnvHost() string {
-	return os.Getenv("HOST")
+	value, present := os.LookupEnv("HOST")
+	if !present {
+		log.Println("#ERROR HOST not set, using default value")
+		return "localhost"
+	}
+	return value
 }
 
 func EnvRetrieveHistory() bool {
@@ -37,9 +47,29 @@ func EnvReleaseMode() bool {
 }
 
 func EnvPort() string {
-	return os.Getenv("PORT")
+	value, present := os.LookupEnv("PORT")
+	if !present {
+		log.Println("#ERROR PORT not set, using default value")
+		return "8080"
+	}
+	return value
 }
 
 func EnvGeminiModel() string {
-	return os.Getenv("GEMINI_MODEL")
+	value, present := os.LookupEnv("GEMINI_MODEL")
+	if !present {
+		log.Println("#ERROR GEMINI_MODEL not set, using default value")
+		return "gemini-1.5-turbo"
+	}
+	return value
+}
+
+func OllamaHost() string {
+	value, present := os.LookupEnv("OLLAMA_HOST")
+	if !present {
+		log.Println("#ERROR OLLAMA_HOST not set, using default value")
+		return "http://localhost:11434"
+
+	}
+	return value
 }

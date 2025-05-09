@@ -5,7 +5,7 @@ import (
 )
 
 type GeminiServiceInterface interface {
-	PromptText(prompt *request.GeminiText) (error, *[]string)
-	Chat(prompt *request.GeminiText) (error, *[]string)
+	PromptText(prompt *request.PromptText) (error, *[]string)
+	Chat(prompt *request.PromptText) (error, *[]string)
 	ResetSession() (error, string)
 }
