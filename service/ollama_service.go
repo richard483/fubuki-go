@@ -3,7 +3,6 @@ package service
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	config "fubuki-go/config"
 	"fubuki-go/dto/request"
@@ -26,7 +25,7 @@ func (srv *OllamaService) PromptOllamaText(prompt *request.PromptText) (*respons
 	ollamaGenerateRequest := request_ext.OllamaGenerateRequest{
 		Model:  prompt.Model,
 		Prompt: prompt.Text,
-		Stream: "false",
+		Stream: true,
 	}
 
 	var jsonRequest []byte
@@ -59,7 +58,11 @@ func (srv *OllamaService) PromptOllamaText(prompt *request.PromptText) (*respons
 	}(ollamaResponse.Body)
 
 	if ollamaResponse.StatusCode != http.StatusOK {
-		return nil, errors.New(fmt.Sprintf("API request failed with status code: %d", ollamaResponse.StatusCode))
+		errorResponse, err := io.ReadAll(ollamaResponse.Body)
+		if err != nil {
+			return nil, fmt.Errorf("API request failed with status code: %d caused by %s", ollamaResponse.StatusCode, err)
+		}
+		return nil, fmt.Errorf("API request failed with status code: %d caused by %s", ollamaResponse.StatusCode, string(errorResponse))
 	}
 
 	responseBody, err := io.ReadAll(ollamaResponse.Body)
