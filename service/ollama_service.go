@@ -25,7 +25,7 @@ func (srv *OllamaService) PromptOllamaText(prompt *request.PromptText) (*respons
 	ollamaGenerateRequest := request_ext.OllamaGenerateRequest{
 		Model:  prompt.Model,
 		Prompt: prompt.Text,
-		Stream: true,
+		Stream: false,
 	}
 
 	var jsonRequest []byte
