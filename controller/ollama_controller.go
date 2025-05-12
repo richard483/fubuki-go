@@ -57,3 +57,43 @@ func (ctr *OllamaController) PromptOllamaText(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
+
+// ChatOllama godoc
+// @Summary      Chat with Ollama Model
+// @Description  get Ollama chat result by defining the model and message
+// @Tags         ollama
+// @Consume      json
+// @Produce      json
+// @Param        PromptText body request.PromptText true "Request Body"
+// @Router       /ollama/chat [post]
+func (ctr *OllamaController) ChatOllama(c *gin.Context) {
+	var prompt request.PromptText
+	if err := c.Bind(&prompt); err != nil {
+		log.Println(err)
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	data, err := ctr.OllamaServiceInterface.ChatOllama(&prompt)
+
+	if err != nil {
+		log.Println(err)
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	res := response.DefaultResponse{
+		StatusCode: http.StatusOK,
+		Message:    http.StatusText(http.StatusOK),
+		Data:       &response.PromptTextData{Text: (*data).Message.Content},
+	}
+	c.JSON(http.StatusOK, res)
+}

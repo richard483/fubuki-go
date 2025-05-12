@@ -145,6 +145,22 @@ paths:
       summary: Reset chat session
       tags:
       - gemini
+  /ollama/chat:
+    post:
+      description: get Ollama chat result by defining the model and message
+      parameters:
+      - description: Request Body
+        in: body
+        name: PromptText
+        required: true
+        schema:
+          $ref: '#/definitions/request.PromptText'
+      produces:
+      - application/json
+      responses: {}
+      summary: Chat with Ollama Model
+      tags:
+      - ollama
   /ollama/prompt-text:
     post:
       description: get Ollama prompt text result by defining the model and text

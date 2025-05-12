@@ -179,6 +179,30 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/ollama/chat": {
+            "post": {
+                "description": "get Ollama chat result by defining the model and message",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ollama"
+                ],
+                "summary": "Chat with Ollama Model",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "PromptText",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.PromptText"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/ollama/prompt-text": {
             "post": {
                 "description": "get Ollama prompt text result by defining the model and text",

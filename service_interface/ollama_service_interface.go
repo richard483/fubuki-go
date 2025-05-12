@@ -7,4 +7,5 @@ import (
 
 type OllamaServiceInterface interface {
 	PromptOllamaText(prompt *request.PromptText) (*response_ext.OllamaGenerateResponse, error)
+	ChatOllama(prompt *request.PromptText) (*response_ext.OllamaChatResponse, error)
 }
