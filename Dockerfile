@@ -3,14 +3,14 @@ FROM golang:1.24.1-alpine AS builder
 # default 8080
 
 WORKDIR /app
-COPY . .
+COPY go.mod go.sum ./
 RUN go mod download
-RUN go build -o ./fbk-go ./main.go
+COPY . ./
+RUN go build -o /out/main
 
 
 FROM alpine:latest AS runner
 
-WORKDIR /app
-COPY --from=builder /app/fbk-go .
-EXPOSE $PORT
-ENTRYPOINT ["./fbk-go"]
+WORKDIR /root/
+COPY --from=builder /out/main .
+CMD ["./main"]
