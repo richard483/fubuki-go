@@ -20,8 +20,9 @@ type OllamaService struct {
 }
 
 var (
-	httpClient     *http.Client
-	httpClientOnce sync.Once
+	ollamaChatHistory []request_ext.OllamaMessage
+	httpClient        *http.Client
+	httpClientOnce    sync.Once
 )
 
 func NewOllamaService() *OllamaService {
@@ -70,18 +71,27 @@ func (srv *OllamaService) ChatOllama(prompt *request.PromptText) (*response_ext.
 		return nil, err
 	}
 
+	ollamaChatHistory = append(ollamaChatHistory, request_ext.OllamaMessage{
+		Role:    response.Message.Role,
+		Content: response.Message.Content,
+	})
+
 	return &response, nil
 }
 
+func (srv *OllamaService) ResetChat() error {
+	ollamaChatHistory = []request_ext.OllamaMessage{}
+	return nil
+}
+
 func prepareOllamaChatJsonRequest(prompt *request.PromptText) ([]byte, error) {
+	ollamaChatHistory = append(ollamaChatHistory, request_ext.OllamaMessage{
+		Role:    "user",
+		Content: prompt.Text,
+	})
 	ollamaGenerateRequest := request_ext.OllamaChatRequest{
-		Model: prompt.Model,
-		Messages: []request_ext.OllamaMessage{
-			request_ext.OllamaMessage{
-				Role:    "user",
-				Content: prompt.Text,
-			},
-		},
+		Model:    prompt.Model,
+		Messages: ollamaChatHistory,
 	}
 
 	return json.Marshal(ollamaGenerateRequest)
@@ -146,5 +156,5 @@ func extractHttpErrorResponse(responseBody io.ReadCloser, statusCode int) error 
 	if err != nil {
 		return fmt.Errorf("API request failed (status: %d): %w", statusCode, err)
 	}
-	return fmt.Errorf("API request failed (status: %d): %w", statusCode, string(errorResponse))
+	return fmt.Errorf("API request failed (status: %d): %v", statusCode, string(errorResponse))
 }

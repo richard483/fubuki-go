@@ -177,4 +177,13 @@ paths:
       summary: Prompt Ollama Text
       tags:
       - ollama
+  /ollama/reset:
+    get:
+      description: reset chat with Ollama model
+      produces:
+      - application/json
+      responses: {}
+      summary: Reset Chat with Ollama Model
+      tags:
+      - ollama
 swagger: "2.0"

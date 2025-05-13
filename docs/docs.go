@@ -226,6 +226,19 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/ollama/reset": {
+            "get": {
+                "description": "reset chat with Ollama model",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ollama"
+                ],
+                "summary": "Reset Chat with Ollama Model",
+                "responses": {}
+            }
         }
     },
     "definitions": {

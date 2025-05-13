@@ -97,3 +97,31 @@ func (ctr *OllamaController) ChatOllama(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
+
+// ResetChat godoc
+// @Summary      Reset Chat with Ollama Model
+// @Description  reset chat with Ollama model
+// @Tags         ollama
+// @Consume      json
+// @Produce      json
+// @Router       /ollama/reset [get]
+func (ctr *OllamaController) ResetChat(c *gin.Context) {
+	err := ctr.OllamaServiceInterface.ResetChat()
+
+	if err != nil {
+		log.Println(err)
+		res := response.DefaultResponse{
+			StatusCode: http.StatusBadRequest,
+			Message:    http.StatusText(http.StatusBadRequest),
+			Error:      err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	res := response.DefaultResponse{
+		StatusCode: http.StatusOK,
+		Message:    http.StatusText(http.StatusOK),
+		Data:       "Ollama chat reset successfully",
+	}
+	c.JSON(http.StatusOK, res)
+}
