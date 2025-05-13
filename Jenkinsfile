@@ -5,5 +5,5 @@ KubePipeline() {
 	projectName = "fbk-go-kube"
 	appPort = "80"
     clusterIP = "10.10.10.9"
-    networkName = "fbk-ui-1"
+    networkName = "fbk-ui"
 }
