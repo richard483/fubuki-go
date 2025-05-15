@@ -33,6 +33,7 @@ func New(helloWorldController *controller.HelloWorldController, geminiController
 	{
 		ollama.POST("/prompt-text", ollamaController.PromptOllamaText)
 		ollama.POST("/chat", ollamaController.ChatOllama)
+		ollama.GET("/reset", ollamaController.ResetChat)
 	}
 
 	geminiHistory := router.Group("/gemini-history")
