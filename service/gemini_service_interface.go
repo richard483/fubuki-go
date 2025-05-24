@@ -1,4 +1,4 @@
-package service_interface
+package service
 
 import (
 	"fubuki-go/dto/request"

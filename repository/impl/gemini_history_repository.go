@@ -1,9 +1,10 @@
-package repository
+package impl
 
 import (
 	"fubuki-go/model"
-	"gorm.io/gorm"
 	"log"
+
+	"gorm.io/gorm"
 )
 
 type GeminiHistoryRepository struct {

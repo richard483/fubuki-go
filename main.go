@@ -5,9 +5,9 @@ import (
 	"fubuki-go/config"
 	"fubuki-go/controller"
 	"fubuki-go/model"
-	"fubuki-go/repository"
+	repository "fubuki-go/repository/impl"
 	"fubuki-go/router"
-	"fubuki-go/service"
+	service "fubuki-go/service/impl"
 	"log"
 
 	"github.com/google/generative-ai-go/genai"

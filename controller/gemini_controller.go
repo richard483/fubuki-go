@@ -3,7 +3,7 @@ package controller
 import (
 	"fubuki-go/dto/request"
 	"fubuki-go/dto/response"
-	"fubuki-go/service_interface"
+	"fubuki-go/service"
 	"log"
 	"net/http"
 
@@ -11,10 +11,10 @@ import (
 )
 
 type GeminiController struct {
-	service_interface.GeminiServiceInterface
+	service.GeminiServiceInterface
 }
 
-func NewGeminiController(service service_interface.GeminiServiceInterface) *GeminiController {
+func NewGeminiController(service service.GeminiServiceInterface) *GeminiController {
 	return &GeminiController{GeminiServiceInterface: service}
 }
 

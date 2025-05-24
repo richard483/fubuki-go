@@ -3,7 +3,7 @@ package controller
 import (
 	"fubuki-go/dto/request"
 	"fubuki-go/dto/response"
-	"fubuki-go/service_interface"
+	"fubuki-go/service"
 	"log"
 	"net/http"
 
@@ -11,10 +11,10 @@ import (
 )
 
 type OllamaController struct {
-	service_interface.OllamaServiceInterface
+	service.OllamaServiceInterface
 }
 
-func NewOllamaController(service service_interface.OllamaServiceInterface) *OllamaController {
+func NewOllamaController(service service.OllamaServiceInterface) *OllamaController {
 	return &OllamaController{OllamaServiceInterface: service}
 }
 

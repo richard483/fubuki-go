@@ -4,18 +4,17 @@ import (
 	"fubuki-go/dto/request"
 	"fubuki-go/dto/response"
 	"fubuki-go/service"
-	"fubuki-go/service_interface"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type GeminiHistoryController struct {
-	Service service_interface.GeminiHistoryServiceInterface
+	service.GeminiHistoryServiceInterface
 }
 
-func NewGeminiHistoryController(service *service.GeminiHistoryService) *GeminiHistoryController {
-	return &GeminiHistoryController{Service: service}
+func NewGeminiHistoryController(service service.GeminiHistoryServiceInterface) *GeminiHistoryController {
+	return &GeminiHistoryController{GeminiHistoryServiceInterface: service}
 }
 
 // CreateHistoryData godoc
@@ -37,7 +36,7 @@ func (ctr *GeminiHistoryController) CreateHistoryData(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
-	err := ctr.Service.CreateHistoryData(&historyData)
+	err := ctr.GeminiHistoryServiceInterface.CreateHistoryData(&historyData)
 
 	if err != nil {
 		res := response.DefaultResponse{
@@ -75,7 +74,7 @@ func (ctr *GeminiHistoryController) CreateManyHistoryData(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
-	err := ctr.Service.CreateManyHistoryData(&historyData)
+	err := ctr.GeminiHistoryServiceInterface.CreateManyHistoryData(&historyData)
 
 	if err != nil {
 		res := response.DefaultResponse{
@@ -102,7 +101,7 @@ func (ctr *GeminiHistoryController) CreateManyHistoryData(c *gin.Context) {
 // @Produce      json
 // @Router       /gemini-history/history-data [get]
 func (ctr *GeminiHistoryController) GetAllHistoryData(c *gin.Context) {
-	data := ctr.Service.GetAllHistoryData()
+	data := ctr.GeminiHistoryServiceInterface.GetAllHistoryData()
 	res := response.DefaultResponse{
 		StatusCode: http.StatusOK,
 		Message:    http.StatusText(http.StatusOK),
@@ -130,7 +129,7 @@ func (ctr *GeminiHistoryController) UpdateHistoryData(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
-	err := ctr.Service.UpdateHistoryData(&historyData)
+	err := ctr.GeminiHistoryServiceInterface.UpdateHistoryData(&historyData)
 	if err != nil {
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
@@ -169,7 +168,7 @@ func (ctr *GeminiHistoryController) DeleteHistoryData(c *gin.Context) {
 		return
 	}
 
-	err := ctr.Service.DeleteHistoryData(id)
+	err := ctr.GeminiHistoryServiceInterface.DeleteHistoryData(id)
 
 	if err != nil {
 		res := response.DefaultResponse{

@@ -1,9 +1,9 @@
-package service
+package impl
 
 import (
 	"fubuki-go/dto/request"
 	"fubuki-go/model"
-	repository "fubuki-go/repository_interface"
+	"fubuki-go/repository"
 )
 
 type GeminiHistoryService struct {

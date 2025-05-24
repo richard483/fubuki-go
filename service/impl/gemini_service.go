@@ -1,10 +1,10 @@
-package service
+package impl
 
 import (
 	"context"
 	"fubuki-go/config"
 	"fubuki-go/dto/request"
-	repository "fubuki-go/repository_interface"
+	"fubuki-go/repository"
 
 	"github.com/google/generative-ai-go/genai"
 )

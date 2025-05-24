@@ -2,16 +2,15 @@ package controller
 
 import (
 	"fubuki-go/service"
-	"fubuki-go/service_interface"
 
 	"github.com/gin-gonic/gin"
 )
 
 type HelloWorldController struct {
-	service_interface.HelloWorldServiceInterface
+	service.HelloWorldServiceInterface
 }
 
-func NewHelloWorldController(service *service.HelloWorldService) *HelloWorldController {
+func NewHelloWorldController(service service.HelloWorldServiceInterface) *HelloWorldController {
 	return &HelloWorldController{HelloWorldServiceInterface: service}
 }
 

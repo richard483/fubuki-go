@@ -1,4 +1,4 @@
-package service
+package impl
 
 import (
 	"github.com/gin-gonic/gin"
