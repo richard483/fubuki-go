@@ -4,7 +4,7 @@ import (
 	"fubuki-go/model"
 )
 
-type GeminiHistoryRepositoryInterface interface {
+type HistoryRepositoryInterface interface {
 	Create(history *model.History) error
 	GetAllByModelSource(modelSource string) []model.History
 	CreateMany(histories *[]model.History) error

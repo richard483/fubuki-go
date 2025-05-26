@@ -7,10 +7,10 @@ import (
 )
 
 type GeminiHistoryService struct {
-	Repository repository.GeminiHistoryRepositoryInterface
+	Repository repository.HistoryRepositoryInterface
 }
 
-func NewGeminiHistoryService(Repository repository.GeminiHistoryRepositoryInterface) *GeminiHistoryService {
+func NewGeminiHistoryService(Repository repository.HistoryRepositoryInterface) *GeminiHistoryService {
 	return &GeminiHistoryService{Repository: Repository}
 }
 
@@ -19,7 +19,7 @@ func (srv *GeminiHistoryService) CreateHistoryData(historyData *request.History)
 	err := srv.Repository.Create(&model.History{
 		UserQuestion: historyData.UserQuestion,
 		ModelAnswer:  historyData.ModelAnswer,
-		ModelSource:  "gemini",
+		ModelSource:  historyData.ModelSource,
 	})
 	return err
 }
@@ -31,7 +31,7 @@ func (srv *GeminiHistoryService) CreateManyHistoryData(historiesData *[]request.
 		histories = append(histories, model.History{
 			UserQuestion: data.UserQuestion,
 			ModelAnswer:  data.ModelAnswer,
-			ModelSource:  "gemini",
+			ModelSource:  data.ModelSource,
 		})
 	}
 	err := srv.Repository.CreateMany(&histories)

@@ -7,25 +7,25 @@ import (
 	"gorm.io/gorm"
 )
 
-type GeminiHistoryRepository struct {
+type HistoryRepository struct {
 	*gorm.DB
 }
 
-func NewGeminiHistoryRepository(db *gorm.DB) *GeminiHistoryRepository {
-	return &GeminiHistoryRepository{db}
+func NewHistoryRepository(db *gorm.DB) *HistoryRepository {
+	return &HistoryRepository{db}
 }
 
-func (r *GeminiHistoryRepository) Create(history *model.History) error {
+func (r *HistoryRepository) Create(history *model.History) error {
 	result := r.DB.Create(&history)
 	return result.Error
 }
 
-func (r *GeminiHistoryRepository) CreateMany(histories *[]model.History) error {
+func (r *HistoryRepository) CreateMany(histories *[]model.History) error {
 	result := r.DB.Create(&histories)
 	return result.Error
 }
 
-func (r *GeminiHistoryRepository) GetAllByModelSource(modelSource string) []model.History {
+func (r *HistoryRepository) GetAllByModelSource(modelSource string) []model.History {
 	var histories []model.History
 	result := r.DB.Where(&model.History{DeletedAt: gorm.DeletedAt{}, ModelSource: modelSource}).Find(&histories)
 
@@ -36,13 +36,13 @@ func (r *GeminiHistoryRepository) GetAllByModelSource(modelSource string) []mode
 	return histories
 }
 
-func (r *GeminiHistoryRepository) Update(history *model.History) error {
+func (r *HistoryRepository) Update(history *model.History) error {
 	result := r.DB.Save(&history)
 
 	return result.Error
 }
 
-func (r *GeminiHistoryRepository) Delete(id string) error {
+func (r *HistoryRepository) Delete(id string) error {
 	result := r.DB.Delete(&model.History{}, id)
 
 	return result.Error

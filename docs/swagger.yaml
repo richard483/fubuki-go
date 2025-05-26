@@ -115,7 +115,7 @@ paths:
       parameters:
       - description: Request Body
         in: body
-        name: CreateGeminiHistory
+        name: CreateHistory
         required: true
         schema:
           $ref: '#/definitions/request.History'
@@ -146,7 +146,7 @@ paths:
       parameters:
       - description: Request Body
         in: body
-        name: CreateManyGeminiHistory
+        name: CreateManyHistory
         required: true
         schema:
           items:

@@ -89,7 +89,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Request Body",
-                        "name": "CreateGeminiHistory",
+                        "name": "CreateHistory",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -154,7 +154,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Request Body",
-                        "name": "CreateManyGeminiHistory",
+                        "name": "CreateManyHistory",
                         "in": "body",
                         "required": true,
                         "schema": {

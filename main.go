@@ -37,7 +37,7 @@ func main() {
 		}
 	}(client)
 
-	geminiHistoryRepository := repository.NewGeminiHistoryRepository(db)
+	geminiHistoryRepository := repository.NewHistoryRepository(db)
 	geminiService := service.NewGeminiService(client, geminiHistoryRepository)
 	helloWorldService := service.NewHelloWorldService()
 	geminiHistoryService := service.NewGeminiHistoryService(geminiHistoryRepository)

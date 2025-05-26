@@ -23,7 +23,7 @@ func NewHistoryController(service service.HistoryServiceInterface) *HistoryContr
 // @Tags         history
 // @Consume      json
 // @Produce      json
-// @Param        CreateGeminiHistory body request.History true "Request Body"
+// @Param        CreateHistory body request.History true "Request Body"
 // @Router       /history/data [post]
 func (ctr *HistoryController) CreateHistoryData(c *gin.Context) {
 	var historyData request.History
@@ -61,7 +61,7 @@ func (ctr *HistoryController) CreateHistoryData(c *gin.Context) {
 // @Tags         history
 // @Consume      json
 // @Produce      json
-// @Param        CreateManyGeminiHistory body []request.History true "Request Body"
+// @Param        CreateManyHistory body []request.History true "Request Body"
 // @Router       /history/data/bulk [post]
 func (ctr *HistoryController) CreateManyHistoryData(c *gin.Context) {
 	var historyData []request.History
