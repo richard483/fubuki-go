@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func New(helloWorldController *controller.HelloWorldController, geminiController *controller.GeminiController, geminiHistoryController *controller.GeminiHistoryController, ollamaController *controller.OllamaController) *gin.Engine {
+func New(helloWorldController *controller.HelloWorldController, geminiController *controller.GeminiController, geminiHistoryController *controller.HistoryController, ollamaController *controller.OllamaController) *gin.Engine {
 
 	if config.EnvReleaseMode() {
 		gin.SetMode(gin.ReleaseMode)
@@ -36,13 +36,13 @@ func New(helloWorldController *controller.HelloWorldController, geminiController
 		ollama.GET("/reset", ollamaController.ResetChat)
 	}
 
-	geminiHistory := router.Group("/gemini-history")
+	geminiHistory := router.Group("/history")
 	{
-		geminiHistory.POST("/history-data", geminiHistoryController.CreateHistoryData)
-		geminiHistory.POST("/history-data/bulk", geminiHistoryController.CreateManyHistoryData)
-		geminiHistory.PATCH("/history-data", geminiHistoryController.UpdateHistoryData)
-		geminiHistory.GET("/history-data", geminiHistoryController.GetAllHistoryData)
-		geminiHistory.DELETE("/history-data", geminiHistoryController.DeleteHistoryData)
+		geminiHistory.POST("/data", geminiHistoryController.CreateHistoryData)
+		geminiHistory.POST("/data/bulk", geminiHistoryController.CreateManyHistoryData)
+		geminiHistory.PATCH("/data", geminiHistoryController.UpdateHistoryData)
+		geminiHistory.GET("/data/:modelSource", geminiHistoryController.GetAllHistoryDataByModelSource)
+		geminiHistory.DELETE("/data", geminiHistoryController.DeleteHistoryData)
 	}
 
 	return router

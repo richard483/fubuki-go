@@ -25,9 +25,9 @@ func (r *GeminiHistoryRepository) CreateMany(histories *[]model.History) error {
 	return result.Error
 }
 
-func (r *GeminiHistoryRepository) GetAll() []model.History {
+func (r *GeminiHistoryRepository) GetAllByModelSource(modelSource string) []model.History {
 	var histories []model.History
-	result := r.DB.Find(&histories)
+	result := r.DB.Where(&model.History{DeletedAt: gorm.DeletedAt{}, ModelSource: modelSource}).Find(&histories)
 
 	if err := result.Error; err != nil {
 		log.Println("#ERROR " + err.Error())

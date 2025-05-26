@@ -14,35 +14,37 @@ func NewGeminiHistoryService(Repository repository.GeminiHistoryRepositoryInterf
 	return &GeminiHistoryService{Repository: Repository}
 }
 
-func (srv *GeminiHistoryService) CreateHistoryData(historyData *request.GeminiHistory) error {
+func (srv *GeminiHistoryService) CreateHistoryData(historyData *request.History) error {
 
 	err := srv.Repository.Create(&model.History{
 		UserQuestion: historyData.UserQuestion,
 		ModelAnswer:  historyData.ModelAnswer,
+		ModelSource:  "gemini",
 	})
 	return err
 }
 
-func (srv *GeminiHistoryService) CreateManyHistoryData(historiesData *[]request.GeminiHistory) error {
+func (srv *GeminiHistoryService) CreateManyHistoryData(historiesData *[]request.History) error {
 
 	var histories []model.History
 	for _, data := range *historiesData {
 		histories = append(histories, model.History{
 			UserQuestion: data.UserQuestion,
 			ModelAnswer:  data.ModelAnswer,
+			ModelSource:  "gemini",
 		})
 	}
 	err := srv.Repository.CreateMany(&histories)
 	return err
 }
 
-func (srv *GeminiHistoryService) GetAllHistoryData() *[]model.History {
-	results := srv.Repository.GetAll()
+func (srv *GeminiHistoryService) GetAllHistoryDataByModelSource(modelSource string) *[]model.History {
+	results := srv.Repository.GetAllByModelSource(modelSource)
 
 	return &results
 }
 
-func (srv *GeminiHistoryService) UpdateHistoryData(historyData *request.UpdateGeminiHistory) error {
+func (srv *GeminiHistoryService) UpdateHistoryData(historyData *request.UpdateHistory) error {
 	err := srv.Repository.Update(&model.History{
 		ID:           historyData.ID,
 		UserQuestion: historyData.UserQuestion,

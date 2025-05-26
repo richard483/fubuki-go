@@ -9,24 +9,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GeminiHistoryController struct {
-	service.GeminiHistoryServiceInterface
+type HistoryController struct {
+	service.HistoryServiceInterface
 }
 
-func NewGeminiHistoryController(service service.GeminiHistoryServiceInterface) *GeminiHistoryController {
-	return &GeminiHistoryController{GeminiHistoryServiceInterface: service}
+func NewHistoryController(service service.HistoryServiceInterface) *HistoryController {
+	return &HistoryController{HistoryServiceInterface: service}
 }
 
 // CreateHistoryData godoc
 // @Summary      CreateHistoryData
 // @Description  create history data
-// @Tags         gemini-history
+// @Tags         history
 // @Consume      json
 // @Produce      json
-// @Param        CreateGeminiHistory body request.GeminiHistory true "Request Body"
-// @Router       /gemini-history/history-data [post]
-func (ctr *GeminiHistoryController) CreateHistoryData(c *gin.Context) {
-	var historyData request.GeminiHistory
+// @Param        CreateGeminiHistory body request.History true "Request Body"
+// @Router       /history/data [post]
+func (ctr *HistoryController) CreateHistoryData(c *gin.Context) {
+	var historyData request.History
 	if err := c.Bind(&historyData); err != nil {
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
@@ -36,7 +36,7 @@ func (ctr *GeminiHistoryController) CreateHistoryData(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
-	err := ctr.GeminiHistoryServiceInterface.CreateHistoryData(&historyData)
+	err := ctr.HistoryServiceInterface.CreateHistoryData(&historyData)
 
 	if err != nil {
 		res := response.DefaultResponse{
@@ -58,13 +58,13 @@ func (ctr *GeminiHistoryController) CreateHistoryData(c *gin.Context) {
 // CreateManyHistoryData godoc
 // @Summary      CreateManyHistoryData
 // @Description  create many history data
-// @Tags         gemini-history
+// @Tags         history
 // @Consume      json
 // @Produce      json
-// @Param        CreateManyGeminiHistory body []request.GeminiHistory true "Request Body"
-// @Router       /gemini-history/history-data/bulk [post]
-func (ctr *GeminiHistoryController) CreateManyHistoryData(c *gin.Context) {
-	var historyData []request.GeminiHistory
+// @Param        CreateManyGeminiHistory body []request.History true "Request Body"
+// @Router       /history/data/bulk [post]
+func (ctr *HistoryController) CreateManyHistoryData(c *gin.Context) {
+	var historyData []request.History
 	if err := c.Bind(&historyData); err != nil {
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
@@ -74,7 +74,7 @@ func (ctr *GeminiHistoryController) CreateManyHistoryData(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
-	err := ctr.GeminiHistoryServiceInterface.CreateManyHistoryData(&historyData)
+	err := ctr.HistoryServiceInterface.CreateManyHistoryData(&historyData)
 
 	if err != nil {
 		res := response.DefaultResponse{
@@ -95,13 +95,15 @@ func (ctr *GeminiHistoryController) CreateManyHistoryData(c *gin.Context) {
 
 // GetAllHistoryData godoc
 // @Summary      GetAllHistoryData
-// @Description  get all history data
-// @Tags         gemini-history
+// @Description  get all history data by model source
+// @Tags         history
 // @Consume      json
 // @Produce      json
-// @Router       /gemini-history/history-data [get]
-func (ctr *GeminiHistoryController) GetAllHistoryData(c *gin.Context) {
-	data := ctr.GeminiHistoryServiceInterface.GetAllHistoryData()
+// @Param        modelSource path string true "Model Source"
+// @Router       /history/data/{modelSource} [get]
+func (ctr *HistoryController) GetAllHistoryDataByModelSource(c *gin.Context) {
+	modelSource := c.Param("modelSource")
+	data := ctr.HistoryServiceInterface.GetAllHistoryDataByModelSource(modelSource)
 	res := response.DefaultResponse{
 		StatusCode: http.StatusOK,
 		Message:    http.StatusText(http.StatusOK),
@@ -113,13 +115,13 @@ func (ctr *GeminiHistoryController) GetAllHistoryData(c *gin.Context) {
 // UpdateHistoryData godoc
 // @Summary      UpdateHistoryData
 // @Description  update history data
-// @Tags         gemini-history
+// @Tags         history
 // @Consume      json
 // @Produce      json
-// @Param        UpdateGeminiHistory body request.UpdateGeminiHistory true "Request Body"
-// @Router       /gemini-history/history-data [patch]
-func (ctr *GeminiHistoryController) UpdateHistoryData(c *gin.Context) {
-	var historyData request.UpdateGeminiHistory
+// @Param        UpdateHistory body request.UpdateHistory true "Request Body"
+// @Router       /history/data [patch]
+func (ctr *HistoryController) UpdateHistoryData(c *gin.Context) {
+	var historyData request.UpdateHistory
 	if err := c.Bind(&historyData); err != nil {
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
@@ -129,7 +131,7 @@ func (ctr *GeminiHistoryController) UpdateHistoryData(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
-	err := ctr.GeminiHistoryServiceInterface.UpdateHistoryData(&historyData)
+	err := ctr.HistoryServiceInterface.UpdateHistoryData(&historyData)
 	if err != nil {
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
@@ -150,12 +152,12 @@ func (ctr *GeminiHistoryController) UpdateHistoryData(c *gin.Context) {
 // DeleteHistoryData godoc
 // @Summary      DeleteHistoryData
 // @Description  delete history data
-// @Tags         gemini-history
+// @Tags         history
 // @Consume      json
 // @Produce      json
 // @Param        id query string false "history ID to be deleted"
-// @Router       /gemini-history/history-data [delete]
-func (ctr *GeminiHistoryController) DeleteHistoryData(c *gin.Context) {
+// @Router       /history/data [delete]
+func (ctr *HistoryController) DeleteHistoryData(c *gin.Context) {
 	id, ok := c.GetQuery("id")
 
 	if !ok {
@@ -168,7 +170,7 @@ func (ctr *GeminiHistoryController) DeleteHistoryData(c *gin.Context) {
 		return
 	}
 
-	err := ctr.GeminiHistoryServiceInterface.DeleteHistoryData(id)
+	err := ctr.HistoryServiceInterface.DeleteHistoryData(id)
 
 	if err != nil {
 		res := response.DefaultResponse{

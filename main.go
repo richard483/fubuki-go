@@ -45,7 +45,7 @@ func main() {
 
 	helloWorldController := controller.NewHelloWorldController(helloWorldService)
 	geminiController := controller.NewGeminiController(geminiService)
-	geminiHistoryController := controller.NewGeminiHistoryController(geminiHistoryService)
+	geminiHistoryController := controller.NewHistoryController(geminiHistoryService)
 	ollamaController := controller.NewOllamaController(ollamaService)
 
 	route := router.New(helloWorldController, geminiController, geminiHistoryController, ollamaController)

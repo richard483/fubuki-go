@@ -1,12 +1,15 @@
 definitions:
-  request.GeminiHistory:
+  request.History:
     properties:
       answer:
+        type: string
+      model_source:
         type: string
       question:
         type: string
     required:
     - answer
+    - model_source
     - question
     type: object
   request.PromptText:
@@ -18,92 +21,25 @@ definitions:
     required:
     - text
     type: object
-  request.UpdateGeminiHistory:
+  request.UpdateHistory:
     properties:
       answer:
         type: string
       id:
         type: integer
+      model_source:
+        type: string
       question:
         type: string
     required:
     - answer
     - id
+    - model_source
     - question
     type: object
 info:
   contact: {}
 paths:
-  /gemini-history/history-data:
-    delete:
-      description: delete history data
-      parameters:
-      - description: history ID to be deleted
-        in: query
-        name: id
-        type: string
-      produces:
-      - application/json
-      responses: {}
-      summary: DeleteHistoryData
-      tags:
-      - gemini-history
-    get:
-      description: get all history data
-      produces:
-      - application/json
-      responses: {}
-      summary: GetAllHistoryData
-      tags:
-      - gemini-history
-    patch:
-      description: update history data
-      parameters:
-      - description: Request Body
-        in: body
-        name: UpdateGeminiHistory
-        required: true
-        schema:
-          $ref: '#/definitions/request.UpdateGeminiHistory'
-      produces:
-      - application/json
-      responses: {}
-      summary: UpdateHistoryData
-      tags:
-      - gemini-history
-    post:
-      description: create history data
-      parameters:
-      - description: Request Body
-        in: body
-        name: CreateGeminiHistory
-        required: true
-        schema:
-          $ref: '#/definitions/request.GeminiHistory'
-      produces:
-      - application/json
-      responses: {}
-      summary: CreateHistoryData
-      tags:
-      - gemini-history
-  /gemini-history/history-data/bulk:
-    post:
-      description: create many history data
-      parameters:
-      - description: Request Body
-        in: body
-        name: CreateManyGeminiHistory
-        required: true
-        schema:
-          items:
-            $ref: '#/definitions/request.GeminiHistory'
-          type: array
-      produces:
-      - application/json
-      responses: {}
-      summary: CreateManyHistoryData
-      tags:
-      - gemini-history
   /gemini/chat:
     post:
       description: chat action API
@@ -145,6 +81,83 @@ paths:
       summary: Reset chat session
       tags:
       - gemini
+  /history/data:
+    delete:
+      description: delete history data
+      parameters:
+      - description: history ID to be deleted
+        in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: DeleteHistoryData
+      tags:
+      - history
+    patch:
+      description: update history data
+      parameters:
+      - description: Request Body
+        in: body
+        name: UpdateHistory
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateHistory'
+      produces:
+      - application/json
+      responses: {}
+      summary: UpdateHistoryData
+      tags:
+      - history
+    post:
+      description: create history data
+      parameters:
+      - description: Request Body
+        in: body
+        name: CreateGeminiHistory
+        required: true
+        schema:
+          $ref: '#/definitions/request.History'
+      produces:
+      - application/json
+      responses: {}
+      summary: CreateHistoryData
+      tags:
+      - history
+  /history/data/{modelSource}:
+    get:
+      description: get all history data by model source
+      parameters:
+      - description: Model Source
+        in: path
+        name: modelSource
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: GetAllHistoryData
+      tags:
+      - history
+  /history/data/bulk:
+    post:
+      description: create many history data
+      parameters:
+      - description: Request Body
+        in: body
+        name: CreateManyGeminiHistory
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/request.History'
+          type: array
+      produces:
+      - application/json
+      responses: {}
+      summary: CreateManyHistoryData
+      tags:
+      - history
   /ollama/chat:
     post:
       description: get Ollama chat result by defining the model and message

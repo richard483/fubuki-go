@@ -15,109 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/gemini-history/history-data": {
-            "get": {
-                "description": "get all history data",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "gemini-history"
-                ],
-                "summary": "GetAllHistoryData",
-                "responses": {}
-            },
-            "post": {
-                "description": "create history data",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "gemini-history"
-                ],
-                "summary": "CreateHistoryData",
-                "parameters": [
-                    {
-                        "description": "Request Body",
-                        "name": "CreateGeminiHistory",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.GeminiHistory"
-                        }
-                    }
-                ],
-                "responses": {}
-            },
-            "delete": {
-                "description": "delete history data",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "gemini-history"
-                ],
-                "summary": "DeleteHistoryData",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "history ID to be deleted",
-                        "name": "id",
-                        "in": "query"
-                    }
-                ],
-                "responses": {}
-            },
-            "patch": {
-                "description": "update history data",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "gemini-history"
-                ],
-                "summary": "UpdateHistoryData",
-                "parameters": [
-                    {
-                        "description": "Request Body",
-                        "name": "UpdateGeminiHistory",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.UpdateGeminiHistory"
-                        }
-                    }
-                ],
-                "responses": {}
-            }
-        },
-        "/gemini-history/history-data/bulk": {
-            "post": {
-                "description": "create many history data",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "gemini-history"
-                ],
-                "summary": "CreateManyHistoryData",
-                "parameters": [
-                    {
-                        "description": "Request Body",
-                        "name": "CreateManyGeminiHistory",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/request.GeminiHistory"
-                            }
-                        }
-                    }
-                ],
-                "responses": {}
-            }
-        },
         "/gemini/chat": {
             "post": {
                 "description": "chat action API",
@@ -176,6 +73,120 @@ const docTemplate = `{
                     "gemini"
                 ],
                 "summary": "Reset chat session",
+                "responses": {}
+            }
+        },
+        "/history/data": {
+            "post": {
+                "description": "create history data",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "history"
+                ],
+                "summary": "CreateHistoryData",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "CreateGeminiHistory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.History"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "description": "delete history data",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "history"
+                ],
+                "summary": "DeleteHistoryData",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "history ID to be deleted",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "description": "update history data",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "history"
+                ],
+                "summary": "UpdateHistoryData",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "UpdateHistory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateHistory"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/history/data/bulk": {
+            "post": {
+                "description": "create many history data",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "history"
+                ],
+                "summary": "CreateManyHistoryData",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "CreateManyGeminiHistory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/request.History"
+                            }
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/history/data/{modelSource}": {
+            "get": {
+                "description": "get all history data by model source",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "history"
+                ],
+                "summary": "GetAllHistoryData",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Model Source",
+                        "name": "modelSource",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {}
             }
         },
@@ -242,14 +253,18 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "request.GeminiHistory": {
+        "request.History": {
             "type": "object",
             "required": [
                 "answer",
+                "model_source",
                 "question"
             ],
             "properties": {
                 "answer": {
+                    "type": "string"
+                },
+                "model_source": {
                     "type": "string"
                 },
                 "question": {
@@ -271,11 +286,12 @@ const docTemplate = `{
                 }
             }
         },
-        "request.UpdateGeminiHistory": {
+        "request.UpdateHistory": {
             "type": "object",
             "required": [
                 "answer",
                 "id",
+                "model_source",
                 "question"
             ],
             "properties": {
@@ -284,6 +300,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "model_source": {
+                    "type": "string"
                 },
                 "question": {
                     "type": "string"

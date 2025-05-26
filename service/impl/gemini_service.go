@@ -57,7 +57,7 @@ func (srv *GeminiService) Chat(prompt *request.PromptText) (error, *[]string) {
 	cs := srv.chatSession(model)
 
 	if config.EnvRetrieveHistory() {
-		var histories = srv.GetAll()
+		var histories = srv.GetAllByModelSource("gemini")
 
 		for _, history := range histories {
 			cs.History = append(cs.History, &genai.Content{
