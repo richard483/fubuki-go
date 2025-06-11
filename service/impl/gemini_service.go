@@ -21,18 +21,18 @@ func NewGeminiService(client *genai.Client, repository repository.HistoryReposit
 var geminiModel *genai.GenerativeModel
 var chatSession *genai.ChatSession
 
-func (srv *GeminiService) ResetSession() (error, string) {
+func (srv *GeminiService) ResetSession() (string, error) {
 	geminiModel = nil
 	chatSession = nil
-	return nil, "ok"
+	return "ok", nil
 }
 
-func (srv *GeminiService) PromptText(prompt *request.PromptText) (error, *[]string) {
+func (srv *GeminiService) PromptText(prompt *request.PromptText) (*[]string, error) {
 	ctx := context.TODO()
 	model := srv.geminiModel()
 	resp, err := model.GenerateContent(ctx, genai.Text(prompt.Text))
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
 
 	var results []string
@@ -47,10 +47,10 @@ func (srv *GeminiService) PromptText(prompt *request.PromptText) (error, *[]stri
 		}
 	}
 
-	return nil, &results
+	return &results, nil
 }
 
-func (srv *GeminiService) Chat(prompt *request.PromptText) (error, *[]string) {
+func (srv *GeminiService) Chat(prompt *request.PromptText) (*[]string, error) {
 	ctx := context.TODO()
 
 	model := srv.geminiModel()
@@ -80,7 +80,7 @@ func (srv *GeminiService) Chat(prompt *request.PromptText) (error, *[]string) {
 
 	if err != nil {
 		cs.History = cs.History[:len(cs.History)-1]
-		return err, nil
+		return nil, err
 	}
 
 	var results []string
@@ -95,7 +95,7 @@ func (srv *GeminiService) Chat(prompt *request.PromptText) (error, *[]string) {
 		}
 	}
 
-	return nil, &results
+	return &results, nil
 }
 
 func (srv *GeminiService) geminiModel() *genai.GenerativeModel {

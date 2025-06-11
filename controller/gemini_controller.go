@@ -38,7 +38,7 @@ func (ctr *GeminiController) PromptText(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
-	err, data := ctr.GeminiServiceInterface.PromptText(&prompt)
+	data, err := ctr.GeminiServiceInterface.PromptText(&prompt)
 
 	if err != nil {
 		log.Println(err)
@@ -79,7 +79,7 @@ func (ctr *GeminiController) Chat(c *gin.Context) {
 		return
 	}
 
-	err, data := ctr.GeminiServiceInterface.Chat(&prompt)
+	data, err := ctr.GeminiServiceInterface.Chat(&prompt)
 	if err != nil {
 		log.Println(err)
 		res := response.DefaultResponse{
@@ -106,7 +106,7 @@ func (ctr *GeminiController) Chat(c *gin.Context) {
 // @Produce      json
 // @Router       /gemini/reset [get]
 func (ctr *GeminiController) ResetSession(c *gin.Context) {
-	err, data := ctr.GeminiServiceInterface.ResetSession()
+	data, err := ctr.GeminiServiceInterface.ResetSession()
 
 	if err != nil {
 		log.Println(err)

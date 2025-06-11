@@ -13,5 +13,4 @@ func NewHelloWorldService() *HelloWorldService {
 
 func (srv *HelloWorldService) HelloWorld(c *gin.Context) {
 	c.JSON(200, "Hello World!!")
-	return
 }
