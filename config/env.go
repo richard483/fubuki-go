@@ -19,6 +19,10 @@ func EnvPostgresURI() string {
 	return value
 }
 
+func EnvRedisURI() string {
+	return os.Getenv("REDIS_URI")
+}
+
 func EnvHost() string {
 	value, present := os.LookupEnv("HOST")
 	if !present {

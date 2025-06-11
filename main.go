@@ -11,6 +11,7 @@ import (
 	"log"
 
 	"github.com/google/generative-ai-go/genai"
+	"github.com/redis/go-redis/v9"
 	"google.golang.org/api/option"
 
 	"net/http"
@@ -23,8 +24,15 @@ func main() {
 		log.Println("#ERROR " + err.Error())
 	}
 
+	opts, err := redis.ParseURL(config.EnvRedisURI())
+	if err != nil {
+		log.Println("#ERROR " + err.Error())
+	}
+
+	redisClient := redis.NewClient(opts)
+
 	ctx := context.TODO()
-	client, err := genai.NewClient(ctx, option.WithAPIKey(config.EnvGeminiApiKey()))
+	geminiClient, err := genai.NewClient(ctx, option.WithAPIKey(config.EnvGeminiApiKey()))
 
 	if err != nil {
 		log.Println("#ERROR " + err.Error())
@@ -35,10 +43,10 @@ func main() {
 		if err != nil {
 			log.Println("#ERROR " + err.Error())
 		}
-	}(client)
+	}(geminiClient)
 
 	geminiHistoryRepository := repository.NewHistoryRepository(db)
-	geminiService := service.NewGeminiService(client, geminiHistoryRepository)
+	geminiService := service.NewGeminiService(geminiClient, geminiHistoryRepository, redisClient)
 	helloWorldService := service.NewHelloWorldService()
 	geminiHistoryService := service.NewGeminiHistoryService(geminiHistoryRepository)
 	ollamaService := service.NewOllamaService()
