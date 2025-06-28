@@ -10,7 +10,7 @@ import (
 	"fubuki-go/dto/request_ext"
 	"fubuki-go/dto/response_ext"
 	"io"
-	"log"
+	"log/slog"
 	"net/http"
 	"sync"
 	"time"
@@ -131,7 +131,7 @@ func extractHttpResponseIntoValue[T any](httpResponse *http.Response, response T
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			log.Println("#ERROR " + err.Error())
+			slog.Error("#extractHttpResponseIntoValue - error closing response body", "error", err.Error())
 		}
 	}(httpResponse.Body)
 

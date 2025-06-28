@@ -1,15 +1,16 @@
 package config
 
 import (
+	"log/slog"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
 func NewDbConnection() *gorm.DB {
 	db, err := gorm.Open(postgres.Open(EnvPostgresURI()))
 	if err != nil {
-		log.Println("#ERROR " + err.Error())
+		slog.Error("#NewDbConnection - error on opening Gorm connection", "error", err.Error())
 	}
 	return db
 }

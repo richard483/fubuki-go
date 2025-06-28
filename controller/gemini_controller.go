@@ -4,7 +4,7 @@ import (
 	"fubuki-go/dto/request"
 	"fubuki-go/dto/response"
 	"fubuki-go/service"
-	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +29,7 @@ func NewGeminiController(service service.GeminiServiceInterface) *GeminiControll
 func (ctr *GeminiController) PromptText(c *gin.Context) {
 	var prompt request.PromptText
 	if err := c.Bind(&prompt); err != nil {
-		log.Println(err)
+		slog.Error("#PromptText - error binding request", "error", err.Error())
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
 			Message:    http.StatusText(http.StatusBadRequest),
@@ -41,7 +41,7 @@ func (ctr *GeminiController) PromptText(c *gin.Context) {
 	data, err := ctr.GeminiServiceInterface.PromptText(&prompt)
 
 	if err != nil {
-		log.Println(err)
+		slog.Error("#PromptText - error getting prompt text", "error", err.Error())
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
 			Message:    http.StatusText(http.StatusBadRequest),
@@ -69,7 +69,7 @@ func (ctr *GeminiController) PromptText(c *gin.Context) {
 func (ctr *GeminiController) Chat(c *gin.Context) {
 	var prompt request.PromptText
 	if err := c.Bind(&prompt); err != nil {
-		log.Println(err)
+		slog.Error("#Chat - error binding request", "error", err.Error())
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
 			Message:    http.StatusText(http.StatusBadRequest),
@@ -81,7 +81,7 @@ func (ctr *GeminiController) Chat(c *gin.Context) {
 
 	data, err := ctr.GeminiServiceInterface.Chat(&prompt)
 	if err != nil {
-		log.Println(err)
+		slog.Error("#Chat - error getting chat response", "error", err.Error())
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
 			Message:    http.StatusText(http.StatusBadRequest),
@@ -109,7 +109,7 @@ func (ctr *GeminiController) ResetSession(c *gin.Context) {
 	data, err := ctr.GeminiServiceInterface.ResetSession()
 
 	if err != nil {
-		log.Println(err)
+		slog.Error("#ResetSession - error resetting session", "error", err.Error())
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
 			Message:    http.StatusText(http.StatusBadRequest),

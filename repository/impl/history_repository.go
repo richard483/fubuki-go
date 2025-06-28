@@ -2,7 +2,7 @@ package impl
 
 import (
 	"fubuki-go/model"
-	"log"
+	"log/slog"
 
 	"gorm.io/gorm"
 )
@@ -30,7 +30,7 @@ func (r *HistoryRepository) GetAllByModelSource(modelSource string) []model.Hist
 	result := r.DB.Where(&model.History{DeletedAt: gorm.DeletedAt{}, ModelSource: modelSource}).Find(&histories)
 
 	if err := result.Error; err != nil {
-		log.Println("#ERROR " + err.Error())
+		slog.Error("#GetAllByModelSource - error fetching histories", "error", err.Error())
 	}
 
 	return histories
