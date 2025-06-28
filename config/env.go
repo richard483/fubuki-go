@@ -73,6 +73,20 @@ func EnvGeminiModel() string {
 	return value
 }
 
+func EnvGeminiGoogleSearch() bool {
+	value, present := os.LookupEnv("GEMINI_GOOGLE_SEARCH")
+	if !present {
+		slog.Warn("#EnvGeminiGoogleSearch - GEMINI_GOOGLE_SEARCH not set, using default value")
+		return false
+	}
+	res, err := strconv.ParseBool(value)
+	if err != nil {
+		slog.Error("#EnvGeminiGoogleSearch - error parsing GEMINI_GOOGLE_SEARCH", "error", err.Error())
+		return false
+	}
+	return res
+}
+
 func OllamaHost() string {
 	value, present := os.LookupEnv("OLLAMA_HOST")
 	if !present {
