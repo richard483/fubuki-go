@@ -129,7 +129,6 @@ func (ctr *HistoryController) GetAllHistoryDataByModelSource(c *gin.Context) {
 // @Param        UpdateHistory body request.UpdateHistory true "Request Body"
 // @Router       /history/data [patch]
 func (ctr *HistoryController) UpdateHistoryData(c *gin.Context) {
-	slog.Info("#UpdateHistoryData - processing request to update history data", "body", c.Request.Body, "path", c.Request.URL.Path)
 	var historyData request.UpdateHistory
 	if err := c.Bind(&historyData); err != nil {
 		res := response.DefaultResponse{
@@ -140,6 +139,7 @@ func (ctr *HistoryController) UpdateHistoryData(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
+	slog.Info("#UpdateHistoryData - processing request to update history data", "body", historyData, "path", c.Request.URL.Path)
 	err := ctr.HistoryServiceInterface.UpdateHistoryData(&historyData)
 	if err != nil {
 		res := response.DefaultResponse{
