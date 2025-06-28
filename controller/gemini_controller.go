@@ -56,7 +56,7 @@ func (ctr *GeminiController) PromptText(c *gin.Context) {
 	res := response.DefaultResponse{
 		StatusCode: http.StatusOK,
 		Message:    http.StatusText(http.StatusOK),
-		Data:       &response.PromptTextData{Text: (*data)[0]},
+		Data:       &response.PromptTextData{Text: (data)},
 	}
 	c.JSON(http.StatusOK, res)
 }
@@ -98,7 +98,7 @@ func (ctr *GeminiController) Chat(c *gin.Context) {
 	res := response.DefaultResponse{
 		StatusCode: http.StatusOK,
 		Message:    http.StatusText(http.StatusOK),
-		Data:       &response.PromptTextData{Text: (*data)[0]},
+		Data:       &response.PromptTextData{Text: (data)},
 	}
 	c.JSON(http.StatusOK, res)
 }

@@ -6,7 +6,7 @@ import (
 	"fubuki-go/dto/request"
 	"fubuki-go/repository"
 
-	"github.com/google/generative-ai-go/genai"
+	genai "google.golang.org/genai"
 )
 
 type GeminiService struct {
@@ -19,114 +19,62 @@ func NewGeminiService(client *genai.Client, repository repository.HistoryReposit
 	return &GeminiService{client, repository, cache}
 }
 
-var geminiModel *genai.GenerativeModel
-var chatSession *genai.ChatSession
+// TODO: may need to move this to redis
+var geminiContent []*genai.Content
 
 func (srv *GeminiService) ResetSession() (string, error) {
-	geminiModel = nil
-	chatSession = nil
+	geminiContent = nil
 	return "ok", nil
 }
 
-func (srv *GeminiService) PromptText(prompt *request.PromptText) (*[]string, error) {
+func (srv *GeminiService) PromptText(prompt *request.PromptText) (string, error) {
 	ctx := context.TODO()
-	model := srv.geminiModel()
-	resp, err := model.GenerateContent(ctx, genai.Text(prompt.Text))
+	resp, err := srv.Client.Models.GenerateContent(ctx, config.EnvGeminiModel(), genai.Text(prompt.Text), srv.getGenerateContentConfig())
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	var results []string
-
-	for _, candidate := range resp.Candidates {
-		if candidate.Content != nil {
-			for _, part := range candidate.Content.Parts {
-				if text, ok := part.(genai.Text); ok {
-					results = append(results, string(text))
-				}
-			}
-		}
-	}
-
-	return &results, nil
+	return resp.Text(), nil
 }
 
-func (srv *GeminiService) Chat(prompt *request.PromptText) (*[]string, error) {
+func (srv *GeminiService) Chat(prompt *request.PromptText) (string, error) {
 	ctx := context.TODO()
 
-	model := srv.geminiModel()
-	cs := srv.chatSession(model)
-
-	if config.EnvRetrieveHistory() {
+	if config.EnvRetrieveHistory() && len(geminiContent) == 0 {
 		var histories = srv.GetAllByModelSource("gemini")
 
 		for _, history := range histories {
-			cs.History = append(cs.History, &genai.Content{
-				Parts: []genai.Part{
-					genai.Text(history.UserQuestion),
-				},
-				Role: "user",
-			})
-
-			cs.History = append(cs.History, &genai.Content{
-				Parts: []genai.Part{
-					genai.Text(history.ModelAnswer),
-				},
-				Role: "model",
-			})
+			geminiContent = append(geminiContent, genai.NewContentFromText(history.UserQuestion, genai.RoleUser))
+			geminiContent = append(geminiContent, genai.NewContentFromText(history.ModelAnswer, genai.RoleModel))
 		}
 	}
 
-	resp, err := cs.SendMessage(ctx, genai.Text(prompt.Text))
+	chat, err := srv.Client.Chats.Create(ctx, config.EnvGeminiModel(), srv.getGenerateContentConfig(), geminiContent)
 
 	if err != nil {
-		cs.History = cs.History[:len(cs.History)-1]
-		return nil, err
+		return "", err
 	}
 
-	var results []string
+	res, err := chat.SendMessage(ctx, genai.Part{Text: prompt.Text})
 
-	for _, candidate := range resp.Candidates {
-		if candidate.Content != nil {
-			for _, part := range candidate.Content.Parts {
-				if text, ok := part.(genai.Text); ok {
-					results = append(results, string(text))
-				}
-			}
-		}
+	if err != nil {
+		return "", err
 	}
 
-	return &results, nil
+	geminiContent = append(geminiContent, genai.NewContentFromText(prompt.Text, genai.RoleUser))
+	geminiContent = append(geminiContent, genai.NewContentFromText(res.Text(), genai.RoleModel))
+
+	return res.Text(), nil
 }
 
-func (srv *GeminiService) geminiModel() *genai.GenerativeModel {
-	if geminiModel == nil {
-		geminiModel = srv.Client.GenerativeModel(config.EnvGeminiModel())
-		geminiModel.SafetySettings = []*genai.SafetySetting{
-			{
-				Category:  genai.HarmCategoryHarassment,
-				Threshold: genai.HarmBlockNone,
-			},
-			{
-				Category:  genai.HarmCategoryHateSpeech,
-				Threshold: genai.HarmBlockNone,
-			},
-			{
-				Category:  genai.HarmCategoryDangerousContent,
-				Threshold: genai.HarmBlockNone,
-			},
-			{
-				Category:  genai.HarmCategorySexuallyExplicit,
-				Threshold: genai.HarmBlockNone,
+func (srv *GeminiService) getGenerateContentConfig() *genai.GenerateContentConfig {
+	if config.EnvGeminiGoogleSearch() {
+		return &genai.GenerateContentConfig{
+			Tools: []*genai.Tool{
+				{GoogleSearch: &genai.GoogleSearch{}},
 			},
 		}
+	} else {
+		return nil
 	}
-	return geminiModel
-}
-
-func (srv *GeminiService) chatSession(model *genai.GenerativeModel) *genai.ChatSession {
-	if chatSession == nil {
-		chatSession = model.StartChat()
-	}
-	return chatSession
 }
