@@ -38,6 +38,9 @@ func (ctr *OllamaController) PromptOllamaText(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
+
+	slog.Info("#PromptOllamaText - processing request to get prompt text", "body", prompt, "path", c.Request.URL.Path)
+
 	data, err := ctr.OllamaServiceInterface.PromptOllamaText(&prompt)
 
 	if err != nil {
@@ -78,6 +81,9 @@ func (ctr *OllamaController) ChatOllama(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
+
+	slog.Info("#ChatOllama - processing request to get chat response", "body", prompt, "path", c.Request.URL.Path)
+
 	data, err := ctr.OllamaServiceInterface.ChatOllama(&prompt)
 
 	if err != nil {
@@ -106,6 +112,7 @@ func (ctr *OllamaController) ChatOllama(c *gin.Context) {
 // @Produce      json
 // @Router       /ollama/reset [get]
 func (ctr *OllamaController) ResetChat(c *gin.Context) {
+	slog.Info("#ResetChat - processing request to reset chat", "path", c.Request.URL.Path)
 	err := ctr.OllamaServiceInterface.ResetChat()
 
 	if err != nil {

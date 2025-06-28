@@ -68,7 +68,7 @@ func EnvGeminiModel() string {
 	value, present := os.LookupEnv("GEMINI_MODEL")
 	if !present {
 		slog.Warn("#EnvGeminiModel - GEMINI_MODEL not set, using default value")
-		return "gemini-1.5-turbo"
+		return "gemini-2.0-flash"
 	}
 	return value
 }

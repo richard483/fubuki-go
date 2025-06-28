@@ -68,7 +68,7 @@ func main() {
 		Handler: route,
 	}
 
-	slog.Info("#main - Swagger served on {http || https}://{host}:" + config.EnvPort() + "/swagger/index.html")
+	slog.Info("#main - Swagger served on (http || https)://(host):" + config.EnvPort() + "/swagger/index.html")
 
 	serverError := server.ListenAndServe()
 

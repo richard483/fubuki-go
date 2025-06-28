@@ -38,6 +38,9 @@ func (ctr *GeminiController) PromptText(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
+
+	slog.Info("#PromptText - processing request to get prompt text", "body", prompt, "path", c.Request.URL.Path)
+
 	data, err := ctr.GeminiServiceInterface.PromptText(&prompt)
 
 	if err != nil {
@@ -79,6 +82,8 @@ func (ctr *GeminiController) Chat(c *gin.Context) {
 		return
 	}
 
+	slog.Info("#Chat - processing request to get chat response", "body", prompt, "path", c.Request.URL.Path)
+
 	data, err := ctr.GeminiServiceInterface.Chat(&prompt)
 	if err != nil {
 		slog.Error("#Chat - error getting chat response", "error", err.Error())
@@ -106,6 +111,9 @@ func (ctr *GeminiController) Chat(c *gin.Context) {
 // @Produce      json
 // @Router       /gemini/reset [get]
 func (ctr *GeminiController) ResetSession(c *gin.Context) {
+
+	slog.Info("#ResetSession - processing request to reset chat session", "path", c.Request.URL.Path)
+
 	data, err := ctr.GeminiServiceInterface.ResetSession()
 
 	if err != nil {
@@ -118,6 +126,7 @@ func (ctr *GeminiController) ResetSession(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
+
 	res := response.DefaultResponse{
 		StatusCode: http.StatusOK,
 		Message:    http.StatusText(http.StatusOK),
