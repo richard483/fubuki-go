@@ -6,4 +6,5 @@ set PORT=example-val
 set RETRIEVE_HISTORY=example-val
 set RELEASE_MODE=example-val
 set GEMINI_MODEL=example-val
+set GEMINI_GOOGLE_SEARCH=example-val
 go run main.go
