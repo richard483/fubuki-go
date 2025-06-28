@@ -19,6 +19,7 @@ func NewGeminiService(client *genai.Client, repository repository.HistoryReposit
 	return &GeminiService{client, repository, cache}
 }
 
+// TODO: may need to move this to redis
 var geminiContent []*genai.Content
 
 func (srv *GeminiService) ResetSession() (string, error) {
@@ -39,7 +40,7 @@ func (srv *GeminiService) PromptText(prompt *request.PromptText) (string, error)
 func (srv *GeminiService) Chat(prompt *request.PromptText) (string, error) {
 	ctx := context.TODO()
 
-	if config.EnvRetrieveHistory() {
+	if config.EnvRetrieveHistory() && len(geminiContent) == 0 {
 		var histories = srv.GetAllByModelSource("gemini")
 
 		for _, history := range histories {
@@ -48,7 +49,12 @@ func (srv *GeminiService) Chat(prompt *request.PromptText) (string, error) {
 		}
 	}
 
-	chat, _ := srv.Client.Chats.Create(ctx, config.EnvGeminiModel(), srv.getGenerateContentConfig(), geminiContent)
+	chat, err := srv.Client.Chats.Create(ctx, config.EnvGeminiModel(), srv.getGenerateContentConfig(), geminiContent)
+
+	if err != nil {
+		return "", err
+	}
+
 	res, err := chat.SendMessage(ctx, genai.Part{Text: prompt.Text})
 
 	if err != nil {
