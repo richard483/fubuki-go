@@ -1,8 +1,9 @@
-set GEMINI_API_KEY=example_value
-set POSTGRES_URI=example_value
-set REDIS_URI=example_value
-set HOST=example_value
-set RETRIEVE_HISTORY=example_value
-set RELEASE_MODE=example_value
-set GEMINI_MODEL=example_value
+set GEMINI_API_KEY=example-val
+set POSTGRES_URI=example-val
+set REDIS_URI=example-val
+set HOST=example-val
+set PORT=example-val
+set RETRIEVE_HISTORY=example-val
+set RELEASE_MODE=example-val
+set GEMINI_MODEL=example-val
 go run main.go

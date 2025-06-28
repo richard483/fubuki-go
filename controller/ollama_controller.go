@@ -4,7 +4,7 @@ import (
 	"fubuki-go/dto/request"
 	"fubuki-go/dto/response"
 	"fubuki-go/service"
-	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +29,7 @@ func NewOllamaController(service service.OllamaServiceInterface) *OllamaControll
 func (ctr *OllamaController) PromptOllamaText(c *gin.Context) {
 	var prompt request.PromptText
 	if err := c.Bind(&prompt); err != nil {
-		log.Println(err)
+		slog.Error("#PromptOllamaText - error binding request", "error", err.Error())
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
 			Message:    http.StatusText(http.StatusBadRequest),
@@ -38,10 +38,13 @@ func (ctr *OllamaController) PromptOllamaText(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
+
+	slog.Info("#PromptOllamaText - processing request to get prompt text", "body", prompt, "path", c.Request.URL.Path)
+
 	data, err := ctr.OllamaServiceInterface.PromptOllamaText(&prompt)
 
 	if err != nil {
-		log.Println(err)
+		slog.Error("#PromptOllamaText - error getting prompt text", "error", err.Error())
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
 			Message:    http.StatusText(http.StatusBadRequest),
@@ -69,7 +72,7 @@ func (ctr *OllamaController) PromptOllamaText(c *gin.Context) {
 func (ctr *OllamaController) ChatOllama(c *gin.Context) {
 	var prompt request.PromptText
 	if err := c.Bind(&prompt); err != nil {
-		log.Println(err)
+		slog.Error("#ChatOllama - error binding request", "error", err.Error())
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
 			Message:    http.StatusText(http.StatusBadRequest),
@@ -78,10 +81,13 @@ func (ctr *OllamaController) ChatOllama(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
+
+	slog.Info("#ChatOllama - processing request to get chat response", "body", prompt, "path", c.Request.URL.Path)
+
 	data, err := ctr.OllamaServiceInterface.ChatOllama(&prompt)
 
 	if err != nil {
-		log.Println(err)
+		slog.Error("#ChatOllama - error getting chat response", "error", err.Error())
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
 			Message:    http.StatusText(http.StatusBadRequest),
@@ -106,10 +112,11 @@ func (ctr *OllamaController) ChatOllama(c *gin.Context) {
 // @Produce      json
 // @Router       /ollama/reset [get]
 func (ctr *OllamaController) ResetChat(c *gin.Context) {
+	slog.Info("#ResetChat - processing request to reset chat", "path", c.Request.URL.Path)
 	err := ctr.OllamaServiceInterface.ResetChat()
 
 	if err != nil {
-		log.Println(err)
+		slog.Error("#ResetChat - error resetting chat", "error", err.Error())
 		res := response.DefaultResponse{
 			StatusCode: http.StatusBadRequest,
 			Message:    http.StatusText(http.StatusBadRequest),

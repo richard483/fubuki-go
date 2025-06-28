@@ -4,6 +4,7 @@ import (
 	"fubuki-go/dto/request"
 	"fubuki-go/dto/response"
 	"fubuki-go/service"
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -36,6 +37,9 @@ func (ctr *HistoryController) CreateHistoryData(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
+
+	slog.Info("#CreateHistoryData - processing request to create history data", "body", historyData, "path", c.Request.URL.Path)
+
 	err := ctr.HistoryServiceInterface.CreateHistoryData(&historyData)
 
 	if err != nil {
@@ -74,6 +78,9 @@ func (ctr *HistoryController) CreateManyHistoryData(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
+
+	slog.Info("#CreateManyHistoryData - processing request to create many history data", "body", historyData, "path", c.Request.URL.Path)
+
 	err := ctr.HistoryServiceInterface.CreateManyHistoryData(&historyData)
 
 	if err != nil {
@@ -102,6 +109,7 @@ func (ctr *HistoryController) CreateManyHistoryData(c *gin.Context) {
 // @Param        modelSource path string true "Model Source"
 // @Router       /history/data/{modelSource} [get]
 func (ctr *HistoryController) GetAllHistoryDataByModelSource(c *gin.Context) {
+	slog.Info("#GetAllHistoryDataByModelSource - processing request to get all history data by model source", "modelSource", c.Param("modelSource"), "path", c.Request.URL.Path)
 	modelSource := c.Param("modelSource")
 	data := ctr.HistoryServiceInterface.GetAllHistoryDataByModelSource(modelSource)
 	res := response.DefaultResponse{
@@ -131,6 +139,7 @@ func (ctr *HistoryController) UpdateHistoryData(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
+	slog.Info("#UpdateHistoryData - processing request to update history data", "body", historyData, "path", c.Request.URL.Path)
 	err := ctr.HistoryServiceInterface.UpdateHistoryData(&historyData)
 	if err != nil {
 		res := response.DefaultResponse{
@@ -158,6 +167,8 @@ func (ctr *HistoryController) UpdateHistoryData(c *gin.Context) {
 // @Param        id query string false "history ID to be deleted"
 // @Router       /history/data [delete]
 func (ctr *HistoryController) DeleteHistoryData(c *gin.Context) {
+	slog.Info("#DeleteHistoryData - processing request to delete history data", "id", c.Query("id"), "path", c.Request.URL.Path)
+
 	id, ok := c.GetQuery("id")
 
 	if !ok {
