@@ -64,6 +64,7 @@ func EnvPort() string {
 	return value
 }
 
+// EnvGeminiModel returns the value of the GEMINI_MODEL environment variable, or "gemini-2.0-flash" if unset.
 func EnvGeminiModel() string {
 	value, present := os.LookupEnv("GEMINI_MODEL")
 	if !present {
@@ -73,6 +74,8 @@ func EnvGeminiModel() string {
 	return value
 }
 
+// EnvGeminiGoogleSearch returns the value of the GEMINI_GOOGLE_SEARCH environment variable as a boolean.
+// If the variable is not set or cannot be parsed as a boolean, it returns false.
 func EnvGeminiGoogleSearch() bool {
 	value, present := os.LookupEnv("GEMINI_GOOGLE_SEARCH")
 	if !present {
@@ -87,6 +90,7 @@ func EnvGeminiGoogleSearch() bool {
 	return res
 }
 
+// OllamaHost returns the value of the OLLAMA_HOST environment variable, or "http://localhost:11434" if it is not set.
 func OllamaHost() string {
 	value, present := os.LookupEnv("OLLAMA_HOST")
 	if !present {

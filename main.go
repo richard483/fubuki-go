@@ -17,6 +17,7 @@ import (
 	"net/http"
 )
 
+// main initializes logging, database, Redis, and AI clients, sets up services and controllers, configures HTTP routing, and starts the HTTP server.
 func main() {
 
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))

@@ -15,6 +15,7 @@ type GeminiService struct {
 	repository.CacheRepositoryInterface
 }
 
+// NewGeminiService creates and returns a new GeminiService with the provided AI client, history repository, and cache repository.
 func NewGeminiService(client *genai.Client, repository repository.HistoryRepositoryInterface, cache repository.CacheRepositoryInterface) *GeminiService {
 	return &GeminiService{client, repository, cache}
 }
