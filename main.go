@@ -45,13 +45,6 @@ func main() {
 		slog.Error("#main - error on initiating Google genai client", "error", err.Error())
 	}
 
-	// defer func(client *genai.Client) {
-	// 	err := client.Close()
-	// 	if err != nil {
-	// 		slog.Error("#main - error on running Google genai client", "error", err.Error())
-	// 	}
-	// }(geminiClient)
-
 	geminiHistoryRepository := repository.NewHistoryRepository(db)
 	geminiService := service.NewGeminiService(geminiClient, geminiHistoryRepository, redisClient)
 	helloWorldService := service.NewHelloWorldService()
