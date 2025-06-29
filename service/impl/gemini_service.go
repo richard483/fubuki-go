@@ -30,7 +30,9 @@ func NewGeminiService(client *genai.Client, repository repository.HistoryReposit
 }
 
 func (srv *GeminiService) ResetSession() (string, error) {
-	srv.cache.Delete(context.TODO(), geminiRedisCacheKey)
+	if err := srv.cache.Delete(context.TODO(), geminiRedisCacheKey); err != nil {
+		return "", err
+	}
 	return "ok", nil
 }
 
