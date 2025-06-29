@@ -35,7 +35,7 @@ func main() {
 
 	redisClient := redis.NewClient(opts)
 
-	ctx := context.TODO()
+	ctx := context.Background()
 	geminiClient, err := genai.NewClient(ctx, &genai.ClientConfig{
 		APIKey:  config.EnvGeminiApiKey(),
 		Backend: genai.BackendGeminiAPI,
