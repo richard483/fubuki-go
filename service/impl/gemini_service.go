@@ -2,28 +2,37 @@ package impl
 
 import (
 	"context"
+	"errors"
 	"fubuki-go/config"
 	"fubuki-go/dto/request"
+	"fubuki-go/helper"
 	"fubuki-go/repository"
 
+	"github.com/redis/go-redis/v9"
 	genai "google.golang.org/genai"
 )
 
 type GeminiService struct {
 	*genai.Client
 	repository.HistoryRepositoryInterface
-	repository.CacheRepositoryInterface
+	cache repository.CacheRepositoryInterface
 }
 
+var geminiRedisCacheKey string
+
 func NewGeminiService(client *genai.Client, repository repository.HistoryRepositoryInterface, cache repository.CacheRepositoryInterface) *GeminiService {
+
+	httpClientOnce.Do(func() {
+		geminiRedisCacheKey = "gemini_" + config.EnvGeminiModel() + "_content"
+	})
+
 	return &GeminiService{client, repository, cache}
 }
 
-// TODO: may need to move this to redis
-var geminiContent []*genai.Content
-
 func (srv *GeminiService) ResetSession() (string, error) {
-	geminiContent = nil
+	if err := srv.cache.Delete(context.TODO(), geminiRedisCacheKey); err != nil {
+		return "", err
+	}
 	return "ok", nil
 }
 
@@ -39,6 +48,14 @@ func (srv *GeminiService) PromptText(prompt *request.PromptText) (string, error)
 
 func (srv *GeminiService) Chat(prompt *request.PromptText) (string, error) {
 	ctx := context.TODO()
+
+	geminiContent, err := helper.GetTyped[[]*genai.Content](srv.cache, ctx, geminiRedisCacheKey)
+
+	if errors.Is(err, redis.Nil) {
+		geminiContent = make([]*genai.Content, 0)
+	} else if err != nil {
+		return "", err
+	}
 
 	if config.EnvRetrieveHistory() && len(geminiContent) == 0 {
 		var histories = srv.GetAllByModelSource("gemini")
@@ -63,6 +80,10 @@ func (srv *GeminiService) Chat(prompt *request.PromptText) (string, error) {
 
 	geminiContent = append(geminiContent, genai.NewContentFromText(prompt.Text, genai.RoleUser))
 	geminiContent = append(geminiContent, genai.NewContentFromText(res.Text(), genai.RoleModel))
+
+	if err := srv.cache.SetJSON(ctx, geminiRedisCacheKey, geminiContent); err != nil {
+		return "", err
+	}
 
 	return res.Text(), nil
 }
