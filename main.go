@@ -45,8 +45,9 @@ func main() {
 		slog.Error("#main - error on initiating Google genai client", "error", err.Error())
 	}
 
+	cacheRedisRepository := repository.NewCacheRepository(redisClient)
 	geminiHistoryRepository := repository.NewHistoryRepository(db)
-	geminiService := service.NewGeminiService(geminiClient, geminiHistoryRepository, redisClient)
+	geminiService := service.NewGeminiService(geminiClient, geminiHistoryRepository, cacheRedisRepository)
 	helloWorldService := service.NewHelloWorldService()
 	geminiHistoryService := service.NewGeminiHistoryService(geminiHistoryRepository)
 	ollamaService := service.NewOllamaService()
