@@ -41,7 +41,7 @@ func (ctr *GeminiController) PromptText(c *gin.Context) {
 
 	slog.Info("#PromptText - processing request to get prompt text", "body", prompt, "path", c.Request.URL.Path)
 
-	data, err := ctr.GeminiServiceInterface.PromptText(&prompt)
+	data, err := ctr.GeminiServiceInterface.PromptText(&prompt, c.Request.Context())
 
 	if err != nil {
 		slog.Error("#PromptText - error getting prompt text", "error", err.Error())
@@ -84,7 +84,7 @@ func (ctr *GeminiController) Chat(c *gin.Context) {
 
 	slog.Info("#Chat - processing request to get chat response", "body", prompt, "path", c.Request.URL.Path)
 
-	data, err := ctr.GeminiServiceInterface.Chat(&prompt)
+	data, err := ctr.GeminiServiceInterface.Chat(&prompt, c.Request.Context())
 	if err != nil {
 		slog.Error("#Chat - error getting chat response", "error", err.Error())
 		res := response.DefaultResponse{
@@ -114,7 +114,7 @@ func (ctr *GeminiController) ResetSession(c *gin.Context) {
 
 	slog.Info("#ResetSession - processing request to reset chat session", "path", c.Request.URL.Path)
 
-	data, err := ctr.GeminiServiceInterface.ResetSession()
+	data, err := ctr.GeminiServiceInterface.ResetSession(c.Request.Context())
 
 	if err != nil {
 		slog.Error("#ResetSession - error resetting session", "error", err.Error())

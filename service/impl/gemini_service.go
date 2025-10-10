@@ -7,6 +7,7 @@ import (
 	"fubuki-go/dto/request"
 	"fubuki-go/helper"
 	"fubuki-go/repository"
+	"sync"
 
 	"github.com/redis/go-redis/v9"
 	genai "google.golang.org/genai"
@@ -18,26 +19,28 @@ type GeminiService struct {
 	cache repository.CacheRepositoryInterface
 }
 
-var geminiRedisCacheKey string
+var (
+	geminiRedisCacheKey string
+	geminiServiceOnce   sync.Once
+)
 
 func NewGeminiService(client *genai.Client, repository repository.HistoryRepositoryInterface, cache repository.CacheRepositoryInterface) *GeminiService {
 
-	httpClientOnce.Do(func() {
+	geminiServiceOnce.Do(func() {
 		geminiRedisCacheKey = "gemini_" + config.EnvGeminiModel() + "_content"
 	})
 
 	return &GeminiService{client, repository, cache}
 }
 
-func (srv *GeminiService) ResetSession() (string, error) {
-	if err := srv.cache.Delete(context.TODO(), geminiRedisCacheKey); err != nil {
+func (srv *GeminiService) ResetSession(ctx context.Context) (string, error) {
+	if err := srv.cache.Delete(ctx, geminiRedisCacheKey); err != nil {
 		return "", err
 	}
 	return "ok", nil
 }
 
-func (srv *GeminiService) PromptText(prompt *request.PromptText) (string, error) {
-	ctx := context.TODO()
+func (srv *GeminiService) PromptText(prompt *request.PromptText, ctx context.Context) (string, error) {
 	resp, err := srv.Client.Models.GenerateContent(ctx, config.EnvGeminiModel(), genai.Text(prompt.Text), srv.getGenerateContentConfig())
 	if err != nil {
 		return "", err
@@ -46,8 +49,7 @@ func (srv *GeminiService) PromptText(prompt *request.PromptText) (string, error)
 	return resp.Text(), nil
 }
 
-func (srv *GeminiService) Chat(prompt *request.PromptText) (string, error) {
-	ctx := context.TODO()
+func (srv *GeminiService) Chat(prompt *request.PromptText, ctx context.Context) (string, error) {
 
 	geminiContent, err := helper.GetTyped[[]*genai.Content](srv.cache, ctx, geminiRedisCacheKey)
 

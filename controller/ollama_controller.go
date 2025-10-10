@@ -41,7 +41,7 @@ func (ctr *OllamaController) PromptOllamaText(c *gin.Context) {
 
 	slog.Info("#PromptOllamaText - processing request to get prompt text", "body", prompt, "path", c.Request.URL.Path)
 
-	data, err := ctr.OllamaServiceInterface.PromptOllamaText(&prompt)
+	data, err := ctr.OllamaServiceInterface.PromptOllamaText(&prompt, c.Request.Context())
 
 	if err != nil {
 		slog.Error("#PromptOllamaText - error getting prompt text", "error", err.Error())
@@ -84,7 +84,7 @@ func (ctr *OllamaController) ChatOllama(c *gin.Context) {
 
 	slog.Info("#ChatOllama - processing request to get chat response", "body", prompt, "path", c.Request.URL.Path)
 
-	data, err := ctr.OllamaServiceInterface.ChatOllama(&prompt)
+	data, err := ctr.OllamaServiceInterface.ChatOllama(&prompt, c.Request.Context())
 
 	if err != nil {
 		slog.Error("#ChatOllama - error getting chat response", "error", err.Error())

@@ -20,23 +20,22 @@ type OllamaService struct {
 }
 
 var (
-	ollamaChatHistory []request_ext.OllamaMessage
-	httpClient        *http.Client
-	httpClientOnce    sync.Once
+	ollamaChatHistory   []request_ext.OllamaMessage
+	httpClient          *http.Client
+	olamaHttpClientOnce sync.Once
 )
 
 func NewOllamaService() *OllamaService {
 	return &OllamaService{}
 }
 
-func (srv *OllamaService) PromptOllamaText(prompt *request.PromptText) (*response_ext.OllamaGenerateResponse, error) {
+func (srv *OllamaService) PromptOllamaText(prompt *request.PromptText, ctx context.Context) (*response_ext.OllamaGenerateResponse, error) {
 
 	jsonRequest, err := prepareOllamaGenerateJsonRequest(prompt)
 	if err != nil {
 		return nil, err
 	}
 
-	ctx := context.TODO()
 	url := config.OllamaHost() + "/api/generate"
 
 	ollamaResponse, err := doHttpResponse(ctx, http.MethodPost, url, bytes.NewBuffer((jsonRequest)))
@@ -52,13 +51,12 @@ func (srv *OllamaService) PromptOllamaText(prompt *request.PromptText) (*respons
 	return &response, nil
 }
 
-func (srv *OllamaService) ChatOllama(prompt *request.PromptText) (*response_ext.OllamaChatResponse, error) {
+func (srv *OllamaService) ChatOllama(prompt *request.PromptText, ctx context.Context) (*response_ext.OllamaChatResponse, error) {
 	jsonRequest, err := prepareOllamaChatJsonRequest(prompt)
 	if err != nil {
 		return nil, err
 	}
 
-	ctx := context.TODO()
 	url := config.OllamaHost() + "/api/chat"
 
 	ollamaResponse, err := doHttpResponse(ctx, http.MethodPost, url, bytes.NewBuffer((jsonRequest)))
@@ -119,7 +117,7 @@ func doHttpResponse(ctx context.Context, method string, url string, jsonRequest 
 }
 
 func getHttpClient() *http.Client {
-	httpClientOnce.Do(func() {
+	olamaHttpClientOnce.Do(func() {
 		httpClient = &http.Client{
 			Timeout: 100 * time.Second,
 		}
